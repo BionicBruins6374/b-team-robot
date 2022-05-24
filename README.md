@@ -9,3 +9,5 @@ Any PR that does not following the following rules will be denied merge.
 - Tabs (size: 4)
 - Clang Formatting ([.clang-format](/.clang-format)) 
 - Constexpr variables for constant values, INSIDE a namespace (`constexpr int config::my_const = 0;`)
+- Object Orientated Code (Robot Class, etc.)
+- east const, with characters on the const (i.e. `std::string const& my_string`, `void my_func(int const* my_int) {}`)
