@@ -51,8 +51,9 @@ public:
 		pros::vision_object_s_t const rtn = m_sensor.get_by_sig(0, 1);
 		if (rtn.signature == SIG_ERR) {
 			return {};
+		} else {
+			return rtn;
 		}
-		return rtn;
 	}
 
 	// returns the distance to the current signature
