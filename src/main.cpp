@@ -38,8 +38,8 @@ public:
 	// used for calibrating sensor to a new object
 	void print_sig() const {
 		if (m_sensor.get_object_count() > 0) {
-			pros::vision_object_s_t const rtn = m_sensor.get_by_size(0);
-			pros::vision_signature_s_t const sig = m_sensor.get_signature(rtn.signature);
+			auto const rtn = m_sensor.get_by_size(0);
+			auto const sig = m_sensor.get_signature(rtn.signature);
 			pros::Vision::print_signature(sig);
 		} else {
 			std::cout << "No objects found" << std::endl;
@@ -48,7 +48,7 @@ public:
 
 	// returns the object of the current signature
 	std::optional<pros::vision_object_s_t> get_obj() const {
-		pros::vision_object_s_t const rtn = m_sensor.get_by_sig(0, 1);
+		auto const rtn = m_sensor.get_by_sig(0, 1);
 		if (rtn.signature == SIG_ERR) {
 			return {};
 		} else {
@@ -58,7 +58,7 @@ public:
 
 	// returns the distance to the current signature
 	std::optional<float> get_dist() const {
-		std::optional<pros::vision_object_s_t> const obj = get_obj();
+		auto const obj = get_obj();
 		if (obj.has_value()) {
 			int const y_height = obj.value().y_middle_coord;
 			float const distance
@@ -72,7 +72,7 @@ public:
 void opcontrol() {
 	// dummy signature for the high goal
 	// will be replaced with real values later
-	pros::vision_signature_s_t const high_goal = pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
+	auto const high_goal = pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
 	Sensor const vision{ ports::VISION, high_goal };
 
 	while (true) {
