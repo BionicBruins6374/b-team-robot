@@ -1,13 +1,24 @@
 # b-team-robot
 
-## Contributing Rules:
-The following rules provide a format and structure for the code written here, so that different coding styles do not conflict and so that code is easily readable and maintainable.
-ALL contributors to this repo must follow these rules. In addition, any changes made must be made as a pull request. DO NOT push code to the main branch, even for admins. 
-Any PR that does not following the following rules will be denied merge.
-- PascalCase for Types, Classes, Structs
-- snake_case for any variables, methods, etc.
-- Tabs (size: 4)
-- Clang Formatting ([.clang-format](/.clang-format)) 
-- Constexpr variables for constant values, INSIDE a namespace (`constexpr int config::my_const = 0;`)
-- Object Orientated Code (Robot Class, etc.)
-- east const, with characters on the const (i.e. `std::string const& my_string`, `void my_func(int const* my_int) {}`)
+## Contributing Rules
+
+The following rules provide a format and structure for the code written here,
+so that different coding styles do not conflict and so that code is easily readable and maintainable.
+
+All contributors to this repo must follow these rules.
+In addition, any changes made must be made as a pull request.
+Do not push code to the main branch.
+
+## Code Guidelines
+
+- `PascalCase` for types and type-level constructs (structs, classes, enums, aliases, concepts, etc)
+- `snake_case` for values (variables, functions, fields, etc)
+- `UPPER_SNAKE_CASE` for constants (not necessarily anything marked const)
+- Use tabs for indentation, spaces for alignment
+- Run `clang-format` for basic formatting (config: [.clang-format](/.clang-format))
+- Use `constexpr` variables for constants,
+	- For configuration, measurements, etc, use namespaces (`config`, `measures`, etc)
+- Generally prefer OOP to encapsulate raw PROS utilities (Arm, Claw, LineTracker, etc)
+- Prefer PROS C APIs over C++ APIs for basic functions like motors
+- Use east `const`, with characters on the `const` (e.g., `std::string const& my_string`, `void my_func(int const* my_int) {}`)
+- Aggressively mark variables, parameters, and methods `const`. If it can be `const`, it should be.
