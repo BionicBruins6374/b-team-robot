@@ -3,6 +3,7 @@
 #include <optional>
 #include <pros/rtos.hpp>
 #include <pros/vision.hpp>
+
 #include "main.hpp"
 
 void initialize() {}
@@ -11,15 +12,15 @@ void competition_initialize() {}
 void autonomous() {}
 
 namespace ports {
-	constexpr int VISION = 1;
+constexpr int VISION = 1;
 }
 
 namespace measures {
-	constexpr int GOAL_HEIGHT = 64; // 25 in to cm
-	constexpr int SENSOR_HEIGHT = 44; // 17.5 in to cm
-	constexpr float VERTICAL_FOV = 0.715585; // 41 deg to radians
-	constexpr float LENS_ANGLE = 0.261799; // 15 deg to radians
-}
+constexpr int GOAL_HEIGHT = 64;  // 25 in to cm
+constexpr int SENSOR_HEIGHT = 44;  // 17.5 in to cm
+constexpr float VERTICAL_FOV = 0.715585;  // 41 deg to radians
+constexpr float LENS_ANGLE = 0.261799;  // 15 deg to radians
+}  // namespace measures
 
 constexpr int SIG_ERR = 255;
 
@@ -28,7 +29,7 @@ private:
 	pros::Vision m_sensor;
 	pros::vision_signature_s_t m_sig;
 public:
-	Sensor(int port, pros::vision_signature_s_t sig): m_sensor(port), m_sig(sig) {
+	Sensor(int port, pros::vision_signature_s_t sig) : m_sensor(port), m_sig(sig) {
 		m_sensor.set_signature(1, &m_sig);
 	}
 
@@ -58,7 +59,8 @@ public:
 		std::optional<pros::vision_object_s_t> obj = get_obj();
 		if (obj.has_value()) {
 			int y_height = obj.value().y_middle_coord;
-			float distance = measures::GOAL_HEIGHT - measures::SENSOR_HEIGHT / std::tan(measures::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(measures::VERTICAL_FOV / 2)));
+			float distance
+				= measures::GOAL_HEIGHT - measures::SENSOR_HEIGHT / std::tan(measures::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(measures::VERTICAL_FOV / 2)));
 			return distance;
 		}
 		return {};
