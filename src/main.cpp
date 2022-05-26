@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <optional>
 #include <pros/rtos.hpp>
@@ -22,7 +23,7 @@ constexpr float VERTICAL_FOV = 0.715585;  // 41 deg to radians
 constexpr float LENS_ANGLE = 0.261799;  // 15 deg to radians
 }  // namespace measures
 
-constexpr int SIG_ERR = 255;
+constexpr uint32_t SIG_ERR = 255;
 
 class Sensor {
 private:
