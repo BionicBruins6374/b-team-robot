@@ -9,6 +9,8 @@ All contributors to this repo must follow these rules.
 In addition, any changes made must be made as a pull request.
 Do not push code to the main branch.
 
+Ensure that your branch name is fairly descriptive. Use `kebab-case` for branch names with more than one word.
+
 ## Code Guidelines
 
 - `PascalCase` for types and type-level constructs (structs, classes, enums, aliases, concepts, etc)
