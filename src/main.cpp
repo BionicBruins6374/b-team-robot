@@ -1,8 +1,8 @@
-#include <pros/vision.hpp>
-#include <pros/rtos.hpp>
 #include <cmath>
-#include <optional>
 #include <iostream>
+#include <optional>
+#include <pros/rtos.hpp>
+#include <pros/vision.hpp>
 #include "main.hpp"
 
 void initialize() {}
