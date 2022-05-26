@@ -60,7 +60,7 @@ public:
 			int y_height = obj.value().y_middle_coord;
 			float distance = measures::GOAL_HEIGHT - measures::SENSOR_HEIGHT / std::tan(measures::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(measures::VERTICAL_FOV / 2)));
 			return distance;
-		} 
+		}
 		return {};
 	}
 };
@@ -72,6 +72,6 @@ void opcontrol() {
 	Sensor vision = Sensor(ports::VISION, high_goal);
 
 	while (true) {
-		pros::Task::delay(1); 
+		pros::Task::delay(1);
 	}
 }
