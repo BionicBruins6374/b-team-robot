@@ -36,7 +36,7 @@ public:
 
 	// prints signature of largest object
 	// used for calibrating sensor to a new object
-	void print_sig() {
+	void print_sig() const {
 		if (m_sensor.get_object_count() > 0) {
 			pros::vision_object_s_t const rtn = m_sensor.get_by_size(0);
 			pros::vision_signature_s_t const sig = m_sensor.get_signature(rtn.signature);
@@ -47,7 +47,7 @@ public:
 	}
 
 	// returns the object of the current signature
-	std::optional<pros::vision_object_s_t> get_obj() {
+	std::optional<pros::vision_object_s_t> get_obj() const {
 		pros::vision_object_s_t const rtn = m_sensor.get_by_sig(0, 1);
 		if (rtn.signature == SIG_ERR) {
 			return {};
@@ -56,7 +56,7 @@ public:
 	}
 
 	// returns the distance to the current signature
-	std::optional<float> get_dist() {
+	std::optional<float> get_dist() const {
 		std::optional<pros::vision_object_s_t> const obj = get_obj();
 		if (obj.has_value()) {
 			int const y_height = obj.value().y_middle_coord;
