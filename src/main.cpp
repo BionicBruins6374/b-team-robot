@@ -61,9 +61,7 @@ public:
 		auto const obj = get_obj();
 		if (obj.has_value()) {
 			int const y_height = obj.value().y_middle_coord;
-			float const distance
-				= measures::GOAL_HEIGHT - measures::SENSOR_HEIGHT / std::tan(measures::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(measures::VERTICAL_FOV / 2)));
-			return distance;
+			return measures::GOAL_HEIGHT - measures::SENSOR_HEIGHT / std::tan(measures::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(measures::VERTICAL_FOV / 2)));
 		}
 		return {};
 	}
