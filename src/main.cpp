@@ -30,7 +30,7 @@ private:
 	pros::Vision m_sensor;
 	pros::vision_signature_s_t m_sig;
 public:
-	Sensor(int port, pros::vision_signature_s_t sig) : m_sensor(port), m_sig(sig) {
+	Sensor(int const port, pros::vision_signature_s_t const sig) : m_sensor(port), m_sig(sig) {
 		m_sensor.set_signature(1, &m_sig);
 	}
 
@@ -38,8 +38,8 @@ public:
 	// used for calibrating sensor to a new object
 	void print_sig() {
 		if (m_sensor.get_object_count() > 0) {
-			pros::vision_object_s_t rtn = m_sensor.get_by_size(0);
-			pros::vision_signature_s_t sig = m_sensor.get_signature(rtn.signature);
+			pros::vision_object_s_t const rtn = m_sensor.get_by_size(0);
+			pros::vision_signature_s_t const sig = m_sensor.get_signature(rtn.signature);
 			pros::Vision::print_signature(sig);
 		} else {
 			std::cout << "No objects found" << std::endl;
@@ -48,7 +48,7 @@ public:
 
 	// returns the object of the current signature
 	std::optional<pros::vision_object_s_t> get_obj() {
-		pros::vision_object_s_t rtn = m_sensor.get_by_sig(0, 1);
+		pros::vision_object_s_t const rtn = m_sensor.get_by_sig(0, 1);
 		if (rtn.signature == SIG_ERR) {
 			return {};
 		}
@@ -57,10 +57,10 @@ public:
 
 	// returns the distance to the current signature
 	std::optional<float> get_dist() {
-		std::optional<pros::vision_object_s_t> obj = get_obj();
+		std::optional<pros::vision_object_s_t> const obj = get_obj();
 		if (obj.has_value()) {
-			int y_height = obj.value().y_middle_coord;
-			float distance
+			int const y_height = obj.value().y_middle_coord;
+			float const distance
 				= measures::GOAL_HEIGHT - measures::SENSOR_HEIGHT / std::tan(measures::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(measures::VERTICAL_FOV / 2)));
 			return distance;
 		}
@@ -71,8 +71,8 @@ public:
 void opcontrol() {
 	// dummy signature for the high goal
 	// will be replaced with real values later
-	pros::vision_signature_s_t high_goal = pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
-	Sensor vision = Sensor(ports::VISION, high_goal);
+	pros::vision_signature_s_t const high_goal = pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
+	Sensor const vision{ ports::VISION, high_goal };
 
 	while (true) {
 		pros::Task::delay(1);
