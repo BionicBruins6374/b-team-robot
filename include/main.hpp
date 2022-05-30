@@ -4,6 +4,7 @@
 #include <pros/vision.hpp>
 #include <pros/motors.hpp>
 #include <pros/adi.hpp>
+#include <pros/misc.hpp>
 
 extern "C" {
 void initialize();
@@ -64,17 +65,34 @@ private:
 	pros::Motor m_right_motor;
 	pros::ADIDigitalOut m_piston;
 public:
+	bool m_on = false;
+
 	Flywheel(uint8_t const left_port, uint8_t const right_port, uint8_t const piston_port);
 
 	// spins the flywheel up to a neutral speed (constants::FLYWHEEL_ON_VELOCITY)
-	void spin_up() const;
+	void spin_up();
 
 	// sets the flywheel motor to zero volage
-	void disengage() const;
+	void disengage();
 
 	// sets the flywheel velocity based on distance to the high goal
 	void aim(float const distance) const;
 
 	// engages the piston to shoot a stored disc
 	void shoot() const;
+};
+
+class Robot {
+private:
+	pros::Controller m_controller{ pros::E_CONTROLLER_MASTER };
+	Sensor m_sensor;
+	Flywheel m_flywheel;
+
+	// fulfills all controller interaction with the flywheel
+	void update_flywheel();
+public:
+	Robot(Sensor sensor, Flywheel flywheel);
+
+	// calls all update_x functions
+	void update();
 };

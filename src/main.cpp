@@ -3,6 +3,7 @@
 #include <pros/rtos.hpp>
 #include <cstdint>
 #include <pros/motors.hpp>
+#include <pros/misc.hpp>
 
 #include "main.hpp"
 
@@ -45,14 +46,16 @@ std::optional<float> Sensor::get_dist() const {
 
 Flywheel::Flywheel(uint8_t const left_port, uint8_t const right_port, uint8_t const piston_port) : m_left_motor{left_port}, m_right_motor{right_port}, m_piston{piston_port} {}
 
-void Flywheel::spin_up() const {
+void Flywheel::spin_up() {
 	m_left_motor.move_velocity(constants::FLYWHEEL_ON_VELOCITY);
 	m_right_motor.move_velocity(constants::FLYWHEEL_ON_VELOCITY);
+	m_on = true;
 }
 
-void Flywheel::disengage() const {
+void Flywheel::disengage() {
 	m_left_motor.move_voltage(0);
 	m_right_motor.move_voltage(0);
+	m_on = false;
 }
 
 void Flywheel::aim(float const distance) const {
@@ -68,13 +71,42 @@ void Flywheel::shoot() const {
 	m_piston.set_value(false);
 }
 
+Robot::Robot(Sensor sensor, Flywheel flywheel) : m_sensor(sensor), m_flywheel(flywheel) {}
+
+void Robot::update_flywheel() {
+	if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+		auto const dist = m_sensor.get_dist();
+		if (dist.has_value()) {
+			m_flywheel.aim(dist.value());
+		} else {
+			m_controller.rumble(".");
+		}
+	} else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+		m_flywheel.shoot();
+	} else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		if (!m_flywheel.m_on) {
+			m_flywheel.spin_up();
+		} else {
+			m_flywheel.disengage();
+		}
+	}
+}
+
+void Robot::update() {
+	update_flywheel();
+}
+
 void opcontrol() {
 	// dummy signature for the high goal
 	// will be replaced with real values later
 	auto const high_goal = pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
+	
 	Sensor const vision{ ports::VISION, high_goal };
+	Flywheel const flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
+	Robot robot{ vision, flywheel };
 
 	while (true) {
+		robot.update();
 		pros::Task::delay(1);
 	}
 }
