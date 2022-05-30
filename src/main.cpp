@@ -2,6 +2,7 @@
 #include <iostream>
 #include <pros/rtos.hpp>
 #include <cstdint>
+#include <pros/motors.hpp>
 
 #include "main.hpp"
 
@@ -40,6 +41,31 @@ std::optional<float> Sensor::get_dist() const {
 		return dimensions::GOAL_HEIGHT - dimensions::SENSOR_HEIGHT / std::tan(dimensions::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(constants::SENSOR_VERTICAL_FOV / 2)));
 	}
 	return {};
+}
+
+Flywheel::Flywheel(uint8_t const left_port, uint8_t const right_port, uint8_t const piston_port) : m_left_motor{left_port}, m_right_motor{right_port}, m_piston{piston_port} {}
+
+void Flywheel::spin_up() const {
+	m_left_motor.move_velocity(constants::FLYWHEEL_ON_VELOCITY);
+	m_right_motor.move_velocity(constants::FLYWHEEL_ON_VELOCITY);
+}
+
+void Flywheel::disengage() const {
+	m_left_motor.move_voltage(0);
+	m_right_motor.move_voltage(0);
+}
+
+void Flywheel::aim(float const distance) const {
+	float const secant = 1/std::cos(dimensions::LAUNCH_ANGLE);
+	int16_t velocity = std::sqrt((-1 * std::pow(distance, 2) * constants::GRAVITY * std::pow(secant, 2))/(2 * (dimensions::GOAL_HEIGHT - (distance * secant * std::sin(dimensions::LAUNCH_ANGLE))) - dimensions::LAUNCH_HEIGHT)) * constants::FLYWHEEL_PROPORTION;
+	m_left_motor.move_velocity(velocity);
+	m_right_motor.move_velocity(velocity);
+}
+
+void Flywheel::shoot() const {
+	m_piston.set_value(true);
+	pros::Task::delay(constants::PISTON_DELAY_TIME);
+	m_piston.set_value(false);
 }
 
 void opcontrol() {
