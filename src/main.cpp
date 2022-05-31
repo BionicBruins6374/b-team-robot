@@ -39,7 +39,9 @@ std::optional<float> Sensor::get_dist() const {
 	auto const obj = get_obj();
 	if (obj.has_value()) {
 		int const y_height = obj.value().y_middle_coord;
-		return dimensions::GOAL_HEIGHT - dimensions::SENSOR_HEIGHT / std::tan(dimensions::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(constants::SENSOR_VERTICAL_FOV / 2)));
+		float const numerator = dimensions::GOAL_HEIGHT - dimensions::SENSOR_HEIGHT;
+		float const denominator = std::tan(dimensions::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(constants::SENSOR_VERTICAL_FOV / 2)));
+		return numerator/denominator;
 	}
 	return {};
 }
@@ -60,9 +62,12 @@ void Flywheel::disengage() {
 
 void Flywheel::aim(float const distance) const {
 	float const secant = 1/std::cos(dimensions::LAUNCH_ANGLE);
-	int16_t velocity = std::sqrt((-1 * std::pow(distance, 2) * constants::GRAVITY * std::pow(secant, 2))/(2 * (dimensions::GOAL_HEIGHT - (distance * secant * std::sin(dimensions::LAUNCH_ANGLE))) - dimensions::LAUNCH_HEIGHT)) * constants::FLYWHEEL_PROPORTION;
-	m_left_motor.move_velocity(velocity);
-	m_right_motor.move_velocity(velocity);
+	float const numerator = (-1 * std::pow(distance, 2) * constants::GRAVITY * std::pow(secant, 2));
+	float const denominator = (2 * (dimensions::GOAL_HEIGHT - (distance * secant * std::sin(dimensions::LAUNCH_ANGLE))) - dimensions::LAUNCH_HEIGHT);
+	float const initial_velocity = std::sqrt(numerator/denominator);
+	int16_t const flywheel_velocity = initial_velocity * constants::FLYWHEEL_PROPORTION;
+	m_left_motor.move_velocity(flywheel_velocity);
+	m_right_motor.move_velocity(flywheel_velocity);
 }
 
 void Flywheel::shoot() const {
