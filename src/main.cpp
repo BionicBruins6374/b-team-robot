@@ -66,9 +66,11 @@ void Flywheel::aim(float const distance) const {
 }
 
 void Flywheel::shoot() const {
-	m_piston.set_value(true);
-	pros::Task::delay(constants::PISTON_DELAY_TIME);
-	m_piston.set_value(false);
+	pros::Task {[=] {
+		m_piston.set_value(true);
+		pros::Task::delay(constants::PISTON_DELAY_TIME);
+    	m_piston.set_value(false);
+    }};	
 }
 
 Robot::Robot(Sensor sensor, Flywheel flywheel) : m_sensor(sensor), m_flywheel(flywheel) {}
