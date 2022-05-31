@@ -1,9 +1,9 @@
 #include <cmath>
-#include <iostream>
-#include <pros/rtos.hpp>
 #include <cstdint>
-#include <pros/motors.hpp>
+#include <iostream>
 #include <pros/misc.hpp>
+#include <pros/motors.hpp>
+#include <pros/rtos.hpp>
 
 #include "main.hpp"
 
@@ -12,7 +12,7 @@ void disabled() {}
 void competition_initialize() {}
 void autonomous() {}
 
-Sensor::Sensor(uint8_t const port, pros::vision_signature_s_t const sig) : m_sensor{port}, m_sig(sig) {
+Sensor::Sensor(uint8_t const port, pros::vision_signature_s_t const sig) : m_sensor{ port }, m_sig(sig) {
 	m_sensor.set_signature(1, &m_sig);
 }
 
@@ -41,12 +41,13 @@ std::optional<float> Sensor::get_dist() const {
 		int const y_height = obj.value().y_middle_coord;
 		float const numerator = dimensions::GOAL_HEIGHT - dimensions::SENSOR_HEIGHT;
 		float const denominator = std::tan(dimensions::LENS_ANGLE - std::atan((1 - y_height / 200) * std::tan(constants::SENSOR_VERTICAL_FOV / 2)));
-		return numerator/denominator;
+		return numerator / denominator;
 	}
 	return {};
 }
 
-Flywheel::Flywheel(uint8_t const left_port, uint8_t const right_port, uint8_t const piston_port) : m_left_motor{left_port}, m_right_motor{right_port}, m_piston{piston_port} {}
+Flywheel::Flywheel(uint8_t const left_port, uint8_t const right_port, uint8_t const piston_port)
+	: m_left_motor{ left_port }, m_right_motor{ right_port }, m_piston{ piston_port } {}
 
 void Flywheel::spin_up() {
 	m_left_motor.move_velocity(constants::FLYWHEEL_ON_VELOCITY);
@@ -61,21 +62,21 @@ void Flywheel::disengage() {
 }
 
 void Flywheel::aim(float const distance) const {
-	float const secant = 1/std::cos(dimensions::LAUNCH_ANGLE);
+	float const secant = 1 / std::cos(dimensions::LAUNCH_ANGLE);
 	float const numerator = (-1 * std::pow(distance, 2) * constants::GRAVITY * std::pow(secant, 2));
 	float const denominator = (2 * (dimensions::GOAL_HEIGHT - (distance * secant * std::sin(dimensions::LAUNCH_ANGLE))) - dimensions::LAUNCH_HEIGHT);
-	float const initial_velocity = std::sqrt(numerator/denominator);
+	float const initial_velocity = std::sqrt(numerator / denominator);
 	int16_t const flywheel_velocity = initial_velocity * constants::FLYWHEEL_PROPORTION;
 	m_left_motor.move_velocity(flywheel_velocity);
 	m_right_motor.move_velocity(flywheel_velocity);
 }
 
 void Flywheel::shoot() const {
-	pros::Task {[=] {
+	pros::Task{ [=] {
 		m_piston.set_value(true);
 		pros::Task::delay(constants::PISTON_DELAY_TIME);
-    	m_piston.set_value(false);
-    }};	
+		m_piston.set_value(false);
+	} };
 }
 
 Robot::Robot(Sensor sensor, Flywheel flywheel) : m_sensor(sensor), m_flywheel(flywheel) {}
@@ -107,7 +108,7 @@ void opcontrol() {
 	// dummy signature for the high goal
 	// will be replaced with real values later
 	auto const high_goal = pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
-	
+
 	Sensor const vision{ ports::VISION, high_goal };
 	Flywheel const flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
 	Robot robot{ vision, flywheel };
