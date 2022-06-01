@@ -1,0 +1,10 @@
+-std=c++2b
+-Weverything
+-Wno-c++98-compat
+-Wno-c++11-compat
+-Wno-c++14-compat
+-Wno-c++17-compat
+-Wno-c++20-compat
+-Wno-missing-noreturn
+-iquoteinclude
+-isystemsysinc
