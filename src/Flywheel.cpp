@@ -22,6 +22,14 @@ void Flywheel::disengage() {
 	m_on = false;
 }
 
+void Flywheel::toggle_active() {
+	if (m_on) {
+		disengage();
+	} else {
+		spin_up();
+	}
+}
+
 void Flywheel::aim(float const distance) const {
 	float const secant = 1 / std::cos(dimensions::LAUNCH_ANGLE);
 	float const numerator = (-1 * std::pow(distance, 2) * constants::GRAVITY * std::pow(secant, 2));

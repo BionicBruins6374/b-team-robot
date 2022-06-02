@@ -22,11 +22,7 @@ void Robot::update_flywheel() {
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
 		m_flywheel.shoot();
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-		if (!m_flywheel.m_on) {
-			m_flywheel.spin_up();
-		} else {
-			m_flywheel.disengage();
-		}
+		m_flywheel.toggle_active();
 	}
 }
 
