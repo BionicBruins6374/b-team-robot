@@ -1,6 +1,15 @@
+#include <pros/misc.h>
+
 #include "Robot.hpp"
 
-Robot::Robot(Sensor sensor, Flywheel flywheel) : m_sensor(sensor), m_flywheel(flywheel) {}
+Robot::Robot(Drivetrain drivetrain, Sensor sensor, Flywheel flywheel) : m_drivetrain(drivetrain), m_sensor(sensor), m_flywheel(flywheel) {}
+
+void Robot::update_drivetrain() {
+	m_drivetrain.update(m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
+	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+		m_drivetrain.next_reference_frame();
+	}
+}
 
 void Robot::update_flywheel() {
 	if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
@@ -22,5 +31,6 @@ void Robot::update_flywheel() {
 }
 
 void Robot::update() {
+	update_drivetrain();
 	update_flywheel();
 }

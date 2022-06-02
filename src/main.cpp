@@ -18,9 +18,10 @@ void opcontrol() {
 	// will be replaced with real values later
 	auto const high_goal = pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4f, 0);
 
-	Sensor const vision{ ports::VISION, high_goal };
+	Drivetrain const drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
+	Sensor const sensor{ ports::VISION, high_goal };
 	Flywheel const flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
-	Robot robot{ vision, flywheel };
+	Robot robot{ drivetrain, sensor, flywheel };
 
 	while (true) {
 		robot.update();
