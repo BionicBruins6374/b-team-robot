@@ -11,4 +11,6 @@ constexpr float SENSOR_VERTICAL_FOV = 0.715585f;  // 41 deg to radians
 constexpr uint32_t PISTON_DELAY_TIME = 500;  // number of milliseconds to wait between extension and retraction of piston indexer
 constexpr uint32_t SIG_ERR = 255;  // the ID value of a nonexistant/errored vision signature
 constexpr float DRIVE_DAMPENING = 0.5f;
+constexpr float CONTROLLER_ANALOG_MAX = 127.0f;
+constexpr float DRIVE_MAX_VELOCITY = 200.0f;
 }  // namespace constants

@@ -11,7 +11,7 @@ Drivetrain::Drivetrain(uint8_t const left_back_motor_port, uint8_t const right_b
 	, m_right_front_motor{ right_front_motor_port } {}
 
 static float scale(float const raw) {
-	return std::pow(raw / 127.0f, 3.0f) * 100.0f * constants::DRIVE_DAMPENING;
+	return std::pow(raw / constants::CONTROLLER_ANALOG_MAX, 3.0f) * constants::DRIVE_MAX_VELOCITY * constants::DRIVE_DAMPENING;
 }
 
 void Drivetrain::update(int32_t forward_backward_axis_int, int32_t left_right_axis_int) {
