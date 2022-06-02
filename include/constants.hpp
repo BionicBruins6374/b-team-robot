@@ -10,4 +10,5 @@ constexpr float GRAVITY = 9.79909f;  // local gravity in m/s/s
 constexpr float SENSOR_VERTICAL_FOV = 0.715585f;  // 41 deg to radians
 constexpr uint32_t PISTON_DELAY_TIME = 500;  // number of milliseconds to wait between extension and retraction of piston indexer
 constexpr uint32_t SIG_ERR = 255;  // the ID value of a nonexistant/errored vision signature
+constexpr float DRIVE_DAMPENING = 0.5f;
 }  // namespace constants
