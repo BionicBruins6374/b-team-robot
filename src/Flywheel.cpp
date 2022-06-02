@@ -41,7 +41,7 @@ void Flywheel::aim(float const distance) const {
 }
 
 void Flywheel::shoot() const {
-	pros::Task{ [=] {
+	pros::Task{ [m_piston = this->m_piston] {
 		m_piston.set_value(true);
 		pros::Task::delay(constants::PISTON_DELAY_TIME);
 		m_piston.set_value(false);
