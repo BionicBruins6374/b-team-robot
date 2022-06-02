@@ -16,9 +16,9 @@ static float scale(float const raw) {
 
 void Drivetrain::update(int32_t forward_backward_axis_int, int32_t left_right_axis_int) {
 	switch (m_reference_frame) {
-		case DrivetrainReferenceFrame::Normal:
+		case DrivetrainReferenceFrame::IntakeAtFront:
 			break;
-		case DrivetrainReferenceFrame::Reversed:
+		case DrivetrainReferenceFrame::FlywheelAtFront:
 			forward_backward_axis_int *= -1;
 			left_right_axis_int *= -1;
 			break;
@@ -42,11 +42,11 @@ void Drivetrain::update(int32_t forward_backward_axis_int, int32_t left_right_ax
 
 void Drivetrain::next_reference_frame() {
 	switch (m_reference_frame) {
-		case DrivetrainReferenceFrame::Normal:
-			m_reference_frame = DrivetrainReferenceFrame::Reversed;
+		case DrivetrainReferenceFrame::IntakeAtFront:
+			m_reference_frame = DrivetrainReferenceFrame::FlywheelAtFront;
 			break;
-		case DrivetrainReferenceFrame::Reversed:
-			m_reference_frame = DrivetrainReferenceFrame::Normal;
+		case DrivetrainReferenceFrame::FlywheelAtFront:
+			m_reference_frame = DrivetrainReferenceFrame::IntakeAtFront;
 			break;
 	}
 }
