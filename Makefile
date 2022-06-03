@@ -13,7 +13,7 @@ SRCDIR=$(ROOT)/src
 INCDIR=$(ROOT)/include
 SYSINCDIR=$(ROOT)/sysinc
 
-WARNFLAGS+=
+WARNFLAGS+=-Wall -Wextra -Werror
 EXTRA_CFLAGS=
 EXTRA_CXXFLAGS=
 

@@ -22,18 +22,26 @@ void Flywheel::disengage() {
 	m_on = false;
 }
 
+void Flywheel::toggle_active() {
+	if (m_on) {
+		disengage();
+	} else {
+		spin_up();
+	}
+}
+
 void Flywheel::aim(float const distance) const {
 	float const secant = 1 / std::cos(dimensions::LAUNCH_ANGLE);
-	float const numerator = (-1 * std::pow(distance, 2) * constants::GRAVITY * std::pow(secant, 2));
+	float const numerator = (-1.0f * std::pow(distance, 2.0f) * constants::GRAVITY * std::pow(secant, 2.0f));
 	float const denominator = (2 * (dimensions::GOAL_HEIGHT - (distance * secant * std::sin(dimensions::LAUNCH_ANGLE))) - dimensions::LAUNCH_HEIGHT);
 	float const initial_velocity = std::sqrt(numerator / denominator);
-	int16_t const flywheel_velocity = initial_velocity * constants::FLYWHEEL_PROPORTION;
+	auto const flywheel_velocity = static_cast<int32_t>(initial_velocity * constants::FLYWHEEL_PROPORTION);
 	m_left_motor.move_velocity(flywheel_velocity);
 	m_right_motor.move_velocity(flywheel_velocity);
 }
 
 void Flywheel::shoot() const {
-	pros::Task{ [=] {
+	pros::Task{ [m_piston = this->m_piston] {
 		m_piston.set_value(true);
 		pros::Task::delay(constants::PISTON_DELAY_TIME);
 		m_piston.set_value(false);
