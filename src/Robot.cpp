@@ -13,7 +13,7 @@ void Robot::update_drivetrain() {
 
 void Robot::update_flywheel() {
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-		auto const dist = m_sensor.get_dist();
+		auto const dist = m_sensor.get_distance();
 		if (dist.has_value()) {
 			m_flywheel.aim(dist.value());
 		} else {

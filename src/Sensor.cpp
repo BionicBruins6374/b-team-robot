@@ -10,7 +10,7 @@ Sensor::Sensor(uint8_t const port, pros::vision_signature_s_t const sig) : m_sen
 	m_sensor.set_signature(1, &m_sig);
 }
 
-void Sensor::print_sig() const {
+void Sensor::print_largest() const {
 	if (m_sensor.get_object_count() > 0) {
 		auto const rtn = m_sensor.get_by_size(0);
 		auto const sig = m_sensor.get_signature(static_cast<uint8_t>(rtn.signature));
@@ -20,7 +20,7 @@ void Sensor::print_sig() const {
 	}
 }
 
-std::optional<pros::vision_object_s_t> Sensor::get_obj() const {
+std::optional<pros::vision_object_s_t> Sensor::get_object() const {
 	auto const rtn = m_sensor.get_by_sig(0, 1);
 	if (rtn.signature == constants::SIG_ERR) {
 		return {};
@@ -29,8 +29,8 @@ std::optional<pros::vision_object_s_t> Sensor::get_obj() const {
 	}
 }
 
-std::optional<float> Sensor::get_dist() const {
-	auto const obj = get_obj();
+std::optional<float> Sensor::get_distance() const {
+	auto const obj = get_object();
 	if (obj.has_value()) {
 		float const y_height = obj.value().y_middle_coord;
 		float const numerator = dimensions::GOAL_HEIGHT - dimensions::SENSOR_HEIGHT;

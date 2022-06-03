@@ -14,11 +14,8 @@ private:
 	Flywheel m_flywheel;
 
 	void update_drivetrain();
-	// fulfills all controller interaction with the flywheel
 	void update_flywheel();
 public:
 	Robot(Drivetrain drivetrain, Sensor sensor, Flywheel flywheel);
-
-	// calls all update_x functions
 	void update();
 };

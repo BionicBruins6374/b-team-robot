@@ -4,8 +4,9 @@
 
 // namespace for nonphysical and programmatical constants
 namespace constants {
-constexpr float CONTROLLER_ANALOG_MAX = 127.0f;
-constexpr float DRIVE_DAMPENING = 0.5f;
+constexpr float CONTROLLER_ANALOG_MAX = 127.0f;  // maximum value for an analog axis on the controller
+constexpr float DRIVE_DAMPENING = 0.5f;  // relative dampening for the drivetrain. 0.0..=1.0
+constexpr float DRIVE_MAX_VELOCITY = 200.0f;  // based on type of gear cartridge in drive motors
 constexpr float FLYWHEEL_PROPORTION = 1.0;  // (needed disc velocity) * (FLYWHEEL_PROPORTION) = (needed motor velocity)
 constexpr float GRAVITY = 9.79909f;  // local gravity in m/s/s
 constexpr float SENSOR_VERTICAL_FOV = 0.715585f;  // 41 deg to radians
