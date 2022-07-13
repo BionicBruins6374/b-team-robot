@@ -5,9 +5,9 @@
 #include "constants.hpp"
 
 Drivetrain::Drivetrain(uint8_t const left_back_motor_port, uint8_t const right_back_motor_port, uint8_t const left_front_motor_port, uint8_t const right_front_motor_port)
-	: m_left_back_motor{ left_back_motor_port }
+	: m_left_back_motor{ left_back_motor_port, true }
 	, m_right_back_motor{ right_back_motor_port }
-	, m_left_front_motor{ left_front_motor_port }
+	, m_left_front_motor{ left_front_motor_port, true }
 	, m_right_front_motor{ right_front_motor_port } {}
 
 static float scale(float const raw) {
@@ -30,8 +30,8 @@ void Drivetrain::update(int32_t forward_backward_axis_int, int32_t left_right_ax
 	forward_backward_axis = scale(forward_backward_axis);
 	left_right_axis = scale(left_right_axis);
 
-	auto const left_velocity = static_cast<int32_t>(forward_backward_axis + left_right_axis);
-	auto const right_velocity = static_cast<int32_t>(forward_backward_axis - left_right_axis);
+	auto const left_velocity = static_cast<int32_t>(forward_backward_axis - left_right_axis);
+	auto const right_velocity = static_cast<int32_t>(forward_backward_axis + left_right_axis);
 
 	m_left_back_motor.move_velocity(left_velocity);
 	m_left_front_motor.move_velocity(left_velocity);

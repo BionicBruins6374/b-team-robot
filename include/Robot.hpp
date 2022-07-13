@@ -4,7 +4,9 @@
 
 #include "Drivetrain.hpp"
 #include "Flywheel.hpp"
+#include "Intake.hpp"
 #include "Sensor.hpp"
+#include "Roller.hpp"
 
 class Robot {
 private:
@@ -12,13 +14,14 @@ private:
 	Drivetrain m_drivetrain;
 	Sensor m_sensor;
 	Flywheel m_flywheel;
+	Intake m_intake;
+	Roller m_roller;
 
 	void update_drivetrain();
-	// fulfills all controller interaction with the flywheel
 	void update_flywheel();
+	void update_intake();
+	void update_roller();
 public:
-	Robot(Drivetrain drivetrain, Sensor sensor, Flywheel flywheel);
-
-	// calls all update_x functions
+	Robot(Drivetrain drivetrain, Sensor sensor, Flywheel flywheel, Intake intake, Roller roller);
 	void update();
 };
