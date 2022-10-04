@@ -12,6 +12,7 @@
 #include <initializer_list>
 #include <stdexcept>
 #include <vector>
+#include <memory>
 
 namespace okapi {
 class ChassisScales {

@@ -1,9 +1,9 @@
 #include <pros/misc.h>
-
+#include <iostream>
 #include "Robot.hpp"
 
-Robot::Robot(Drivetrain drivetrain, Sensor sensor, Flywheel flywheel, Intake intake, Roller roller)
-	: m_drivetrain(drivetrain), m_sensor(sensor), m_flywheel(flywheel), m_intake(intake), m_roller(roller) {}
+Robot::Robot(Drivetrain drivetrain, Flywheel flywheel, Intake intake, Roller roller)
+	: m_drivetrain(drivetrain), m_flywheel(flywheel), m_intake(intake), m_roller(roller) {}
 
 void Robot::update_drivetrain() {
 	m_drivetrain.update(m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
@@ -13,23 +13,27 @@ void Robot::update_drivetrain() {
 }
 
 void Robot::update_flywheel() {
-	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-		auto const dist = m_sensor.get_distance();
-		if (dist.has_value()) {
-			m_flywheel.aim(dist.value());
-		} else {
-			m_controller.rumble(".");
-		}
+	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+		m_flywheel.aim(0);
+	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+		m_flywheel.aim(1);
+	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+		m_flywheel.aim(2);
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
 		m_flywheel.shoot();
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-		m_flywheel.toggle_active();
+		m_flywheel.toggle_active(false);
+	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+		m_flywheel.toggle_active(true);
 	}
 }
 
 void Robot::update_intake() {
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-		m_intake.toggle();
+		m_intake.toggle(false);
+	}
+	else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+		m_intake.toggle(true);
 	}
 }
 

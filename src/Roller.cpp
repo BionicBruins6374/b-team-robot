@@ -12,14 +12,14 @@ void Roller::switch_color() const {
 	m_right_motor.move_relative(180, 100);
 }
 
-void Roller::fine_adjust(bool reverse) const {
+void Roller::fine_adjust(bool const reverse) const {
 	if (reverse) {
-		// move at a slow pace backwards
-		m_left_motor.move_relative(-1, 20);
-		m_right_motor.move_relative(-1, 20);
+		// move at a medium pace backwards
+		m_left_motor.move_relative(-10, 35);
+		m_right_motor.move_relative(-10, 35);
 	} else {
-		// move at a slow pace forward
-		m_left_motor.move_relative(1, 20);
-		m_right_motor.move_relative(1, 20);
+		// move at a medium pace forward
+		m_left_motor.move_relative(10, 35);
+		m_right_motor.move_relative(10, 35);
 	}
 }

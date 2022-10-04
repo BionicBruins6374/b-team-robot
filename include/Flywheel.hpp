@@ -10,6 +10,7 @@ private:
 	pros::ADIDigitalOut m_piston;
 
 	bool m_on = false;
+	bool m_reverse = true;
 public:
 	Flywheel(uint8_t const left_port, uint8_t const right_port, uint8_t const piston_port);
 
@@ -20,11 +21,13 @@ public:
 	void disengage();
 
 	// toggle active state of flywheel
-	void toggle_active();
+	void toggle_active(bool const reverse);
 
 	// sets the flywheel velocity based on distance to the high goal
-	void aim(float const distance) const;
+	void aim(uint8_t const velocity_option);
 
 	// engages the piston to shoot a stored disc
 	void shoot() const;
+
+	int32_t reverse_velocity(int32_t const velocity) const;
 };

@@ -8,9 +8,12 @@ private:
 	pros::Motor m_left_motor;
 	pros::Motor m_right_motor;
 	bool m_on = false;
+	bool m_reverse = false;
+
 public:
 	Intake(uint8_t const left_port, uint8_t const right_port);
-	bool on() const;
-	void set_on(bool);
-	void toggle();
+	void set_on(bool const value);
+	void toggle(bool const reverse);
+	int32_t reverse_velocity(int32_t const velocity) const;
+
 };

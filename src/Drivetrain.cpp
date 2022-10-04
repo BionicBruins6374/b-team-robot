@@ -20,7 +20,7 @@ void Drivetrain::update(int32_t forward_backward_axis_int, int32_t left_right_ax
 			break;
 		case DrivetrainReferenceFrame::FlywheelAtFront:
 			forward_backward_axis_int *= -1;
-			left_right_axis_int *= -1;
+			left_right_axis_int *= 1;
 			break;
 	}
 

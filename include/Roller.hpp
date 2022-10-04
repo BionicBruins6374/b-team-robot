@@ -11,5 +11,5 @@ private:
 public:
 	Roller(uint8_t const left_port, uint8_t const right_port);
 	void switch_color() const;
-	void fine_adjust(bool reverse) const;
+	void fine_adjust(bool const reverse) const;
 };
