@@ -1,6 +1,7 @@
-#include <okapi/api.hpp>
+#include <okapi/impl/chassis/controller/chassisControllerBuilder.hpp>
+#include <okapi/impl/device/motor/motorGroup.hpp>
 #include <cstdint>
 
 using namespace okapi;
 
-OdomChassisController& build_odometry(uint8_t left_motor, uint8_t right_motor) {}
+std::shared_ptr<OdomChassisController> build_odometry(MotorGroup left_motor, MotorGroup right_motor);

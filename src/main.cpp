@@ -9,10 +9,14 @@
 #include "main.hpp"
 #include "ports.hpp"
 
+#include "odometry.hpp"
+
+#include <okapi/impl/device/motor/motor.hpp>
+#include <okapi/impl/device/motor/motorGroup.hpp>
+
 void initialize() {}
 void disabled() {}
 void competition_initialize() {}
-void autonomous() {}
 
 void opcontrol() {
 	Drivetrain const drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
@@ -27,4 +31,11 @@ void opcontrol() {
 		robot.update();
 		pros::Task::delay(1);
 	}
+}
+
+void autonomous() {
+	auto odometry = build_odometry(okapi::MotorGroup({okapi::Motor(2), okapi::Motor(10)}), 
+								   okapi::MotorGroup({okapi::Motor(1), okapi::Motor(9)}));
+
+	odometry->driveToPoint({1_ft, 1_ft});
 }
