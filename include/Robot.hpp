@@ -5,7 +5,7 @@
 #include "Drivetrain.hpp"
 #include "Flywheel.hpp"
 #include "Intake.hpp"
-#include "Roller.hpp"
+#include "Expansion.hpp"
 
 class Robot {
 private:
@@ -13,13 +13,13 @@ private:
 	Drivetrain m_drivetrain;
 	Flywheel m_flywheel;
 	Intake m_intake;
-	Roller m_roller;
+	Expansion m_expansion;
 
 	void update_drivetrain();
 	void update_flywheel();
 	void update_intake();
-	void update_roller();
+	void update_expansion();
 public:
-	Robot(Drivetrain drivetrain, Flywheel flywheel, Intake intake, Roller roller);
+	Robot(Drivetrain drivetrain, Flywheel flywheel, Intake intake, Expansion expansion);
 	void update();
 };

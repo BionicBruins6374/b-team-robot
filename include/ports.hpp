@@ -8,6 +8,8 @@ constexpr uint8_t FLYWHEEL_LEFT = 15;
 constexpr uint8_t FLYWHEEL_RIGHT = 12;
 
 constexpr uint8_t PISTON_INDEXER = 'A';
+constexpr uint8_t EXPANSION_PISTON = 'B';
+
 
 constexpr uint8_t LEFT_BACK_MOTOR = 2;
 constexpr uint8_t RIGHT_BACK_MOTOR = 1;
