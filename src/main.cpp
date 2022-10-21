@@ -17,7 +17,6 @@
 void initialize() {}
 void disabled() {}
 void competition_initialize() {}
-void autonomous() {}
 
 void opcontrol() {
 	Drivetrain const drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
@@ -33,9 +32,9 @@ void opcontrol() {
 	}
 }
 
-// void autonomous() {
-// 	auto odometry = build_odometry(okapi::MotorGroup({okapi::Motor(2), okapi::Motor(10)}), 
-// 								   okapi::MotorGroup({okapi::Motor(1), okapi::Motor(9)}));
+void autonomous() {
+	auto odometry = build_odometry(okapi::MotorGroup({okapi::Motor(-ports::LEFT_BACK_MOTOR), okapi::Motor(-ports::LEFT_FRONT_MOTOR)}), 
+								   okapi::MotorGroup({okapi::Motor(ports::RIGHT_BACK_MOTOR), okapi::Motor(ports::RIGHT_FRONT_MOTOR)}));
 
-// 	odometry->driveToPoint({1_ft, 1_ft});
-// }
+	odometry->driveToPoint({1_ft, 1_ft});
+}
