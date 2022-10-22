@@ -4,7 +4,7 @@
 
 #include "constants.hpp"
 
-Drivetrain::Drivetrain(uint8_t const left_back_motor_port, uint8_t const right_back_motor_port, uint8_t const left_front_motor_port, uint8_t const right_front_motor_port)
+Drivetrain::Drivetrain(int8_t const left_back_motor_port, int8_t const right_back_motor_port, int8_t const left_front_motor_port, int8_t const right_front_motor_port)
 	: m_left_back_motor{ left_back_motor_port, true }
 	, m_right_back_motor{ right_back_motor_port }
 	, m_left_front_motor{ left_front_motor_port, true }

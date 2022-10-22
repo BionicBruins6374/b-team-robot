@@ -6,7 +6,7 @@
 
 #include "constants.hpp"
 
-Flywheel::Flywheel(uint8_t const left_port, uint8_t const right_port, uint8_t const piston_port)
+Flywheel::Flywheel(int8_t const left_port, int8_t const right_port, int8_t const piston_port)
 	: m_left_motor{ left_port, true }, m_right_motor{ right_port}, m_piston{ piston_port } {}
 
 void Flywheel::spin_up() {

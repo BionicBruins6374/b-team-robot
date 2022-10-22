@@ -2,7 +2,7 @@
 
 #include "constants.hpp"
 
-Intake::Intake(uint8_t const left_port, uint8_t const right_port) : m_left_motor{ left_port }, m_right_motor{ right_port, true } {}
+Intake::Intake(int8_t const left_port, int8_t const right_port) : m_left_motor{ left_port }, m_right_motor{ right_port, true } {}
 
 void Intake::set_on(bool value) {
 	m_on = value;

@@ -3,8 +3,8 @@ bin/main.cpp.o: src/main.cpp include/pros/rtos.hpp include/pros/rtos.h \
  include/pros/adi.hpp include/pros/adi.h include/pros/motors.hpp \
  include/pros/motors.h include/Robot.hpp include/pros/misc.hpp \
  include/pros/misc.h include/Drivetrain.hpp include/Intake.hpp \
- include/Expansion.hpp include/main.hpp include/ports.hpp \
- include/odometry.hpp \
+ include/Expansion.hpp include/Roller.hpp include/main.hpp \
+ include/ports.hpp include/odometry.hpp \
  include/okapi/impl/chassis/controller/chassisControllerBuilder.hpp \
  include/okapi/api/chassis/controller/chassisControllerIntegrated.hpp \
  include/okapi/api/chassis/controller/chassisController.hpp \
@@ -143,6 +143,7 @@ include/pros/misc.h:
 include/Drivetrain.hpp:
 include/Intake.hpp:
 include/Expansion.hpp:
+include/Roller.hpp:
 include/main.hpp:
 include/ports.hpp:
 include/odometry.hpp:

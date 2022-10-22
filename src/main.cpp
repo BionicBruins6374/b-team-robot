@@ -23,8 +23,9 @@ void opcontrol() {
 	Flywheel const flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
 	Intake const intake{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
 	Expansion const expansion{ ports::EXPANSION_PISTON };
+	Roller const roller {ports::INTAKE_LEFT, ports::INTAKE_RIGHT};
 
-	Robot robot{ drivetrain, flywheel, intake, expansion};
+	Robot robot{ drivetrain, flywheel, intake, expansion, roller};
 
 	while (true) {
 		robot.update();
