@@ -1,6 +1,6 @@
 #include <cmath>
 #include <cstdint>
-#include <pros/rtos.hpp>
+#include "pros/rtos.hpp"
 
 #include "Flywheel.hpp"
 

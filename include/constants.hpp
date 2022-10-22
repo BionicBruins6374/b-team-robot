@@ -9,6 +9,5 @@ constexpr float DRIVE_DAMPENING = 0.75f;  // relative dampening for the drivetra
 constexpr float DRIVE_MAX_VELOCITY = 200.0f;  // fastest drivetrain velocity
 constexpr int32_t FLYWHEEL_VELOCITIES[3] = {75, 100, 150};  // constant flywheel velocities to choose from
 constexpr uint32_t PISTON_DELAY_TIME = 250;  // number of milliseconds to wait between extension and retraction of piston indexer
-constexpr uint32_t SIG_ERR = 255;  // the ID value of a nonexistant/errored vision signature
 constexpr int32_t INTAKE_VELOCITY = 200; // intake motor velocity
 }  // namespace constants

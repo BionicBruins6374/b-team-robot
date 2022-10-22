@@ -1,7 +1,7 @@
 #pragma once
 
-#include <pros/adi.hpp>
-#include <pros/motors.hpp>
+#include "pros/adi.hpp"
+#include "pros/motors.hpp"
 
 class Flywheel {
 private:

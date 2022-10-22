@@ -11,9 +11,8 @@ FWDIR:=$(ROOT)/firmware
 BINDIR=$(ROOT)/bin
 SRCDIR=$(ROOT)/src
 INCDIR=$(ROOT)/include
-SYSINCDIR=$(ROOT)/sysinc
 
-WARNFLAGS+=-Wall -Wextra -Werror
+WARNFLAGS+=
 EXTRA_CFLAGS=
 EXTRA_CXXFLAGS=
 
@@ -27,8 +26,8 @@ EXCLUDE_COLD_LIBRARIES:=
 # Set this to 1 to add additional rules to compile your project as a PROS library template
 IS_LIBRARY:=0
 # TODO: CHANGE THIS!
-LIBNAME:=armbot
-VERSION:=0.1.0
+LIBNAME:=libbest
+VERSION:=1.0.0
 # EXCLUDE_SRC_FROM_LIB= $(SRCDIR)/unpublishedfile.c
 # this line excludes opcontrol.c and similar files
 EXCLUDE_SRC_FROM_LIB+=$(foreach file, $(SRCDIR)/main,$(foreach cext,$(CEXTS),$(file).$(cext)) $(foreach cxxext,$(CXXEXTS),$(file).$(cxxext)))

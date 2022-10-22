@@ -1,5 +1,5 @@
-#include <pros/rtos.hpp>
-#include <pros/vision.hpp>
+#include "pros/rtos.hpp"
+#include "pros/vision.hpp"
 
 #include "Flywheel.hpp"
 #include "Robot.hpp"
@@ -8,11 +8,11 @@
 #include "main.hpp"
 #include "ports.hpp"
 
-#include "Odometry.hpp"
+#include "odometry.hpp"
 #include "Expansion.hpp"
 
-#include <okapi/impl/device/motor/motor.hpp>
-#include <okapi/impl/device/motor/motorGroup.hpp>
+#include "okapi/impl/device/motor/motor.hpp"
+#include "okapi/impl/device/motor/motorGroup.hpp"
 
 void initialize() {}
 void disabled() {}
