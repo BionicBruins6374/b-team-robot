@@ -16,7 +16,7 @@ private:
 	pros::Motor m_right_front_motor;
 	DrivetrainReferenceFrame m_reference_frame = DrivetrainReferenceFrame::IntakeAtFront;
 public:
-	Drivetrain(uint8_t left_back_motor_port, uint8_t right_back_motor_port, uint8_t left_front_motor_port, uint8_t right_front_motor_port);
+	Drivetrain(int8_t left_back_motor_port, int8_t right_back_motor_port, int8_t left_front_motor_port, int8_t right_front_motor_port);
 	void update(int32_t forward_backward_axis, int32_t left_right_axis);
 	void next_reference_frame();
 };
