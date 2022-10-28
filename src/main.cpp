@@ -14,9 +14,75 @@
 #include "okapi/impl/device/motor/motor.hpp"
 #include "okapi/impl/device/motor/motorGroup.hpp"
 
-void initialize() {}
+#include <chrono>
+// #include <Windows.h>
+#include <cstdint>
+
+
+double const TILE_LENGTH = 21.92;
+double const ROLLER_LENGTH = TILE_LENGTH - 13.46;
+
+
+
+double secondsPerAngle(double angle) {
+	return 1.17 * (angle/360) * 1000;  // 1.75 seconds/360 degrees UPDATED (*2/3)
+}
+
+double millisecondsPerInch(double inches) {
+	// Math:
+	// 2 * pi * r = pi * d = length spun in 1.75 seconds
+	// d = sqrt(16.5354^2 + 18^2) = 24.4421655
+	// inches per 1.75 seconds (circumference of the circles being spun) = 76.7873276
+	// the "/" means "per" --> (ex) "1.75 seconds per 76.~~~~ inches"
+	// 1.75s / 76.7873276in = 0.0227902188s / 1 in = 1 in / 0.0227902188 s	
+	// first movement: TILE_LENGTH * 3 - 16.5354 
+	// in seconds: 1 in * (TILE_LENGTH * 3 - 16.5354 ) / 0.0227902188 s	* (TILE_LENGTH * 3 - 16.5354)
+	// first movement (in)  = 127 velocity for 1.1218394 seconds
+
+	// UPDATE: multiplied inches per second by 2/3 bc after testing we saw that it was moving
+	// 3 feet instead of two feet
+	return 0.0151934792 * inches * 1000;
+}
+
+
+void low_goals(int disk_num, Flywheel a_flywheel) {
+	a_flywheel.toggle_active(true);
+	pros::Task::delay(5000);
+
+	for (int i = 0 ; i < (disk_num+1) ; i ++) {
+		a_flywheel.shoot();
+		pros::Task::delay(3500);		
+	}
+	a_flywheel.disengage();
+
+}
+void initialize() {
+	int x_addent = 0;
+	int y_addent = 100;
+	for (int i =0; i <3; i++) {
+		pros::screen::set_pen(COLOR_RED);
+		pros::screen::draw_rect(5 + x_addent, 200, 25+x_addent, 150);
+		pros::screen::set_pen(COLOR_BLUE);
+		pros::screen::draw_rect(5 + x_addent, 100, 25+x_addent, 50);
+		x_addent += 20;
+	}
+}
 void disabled() {}
-void competition_initialize() {}
+void competition_initialize() {
+	// or make a list where each sublist is a line and each item inside the sublist is a function and its corresponding text
+	// use lambdas for input where u change from -1 to 1 RO JUST have a function that'll change it based ont eh value
+	// (like a switch)
+	int x_addent = 0;
+	int y_addent = 100;
+	for (int i =0; i <3; i++) {
+		pros::screen::set_pen(COLOR_RED);
+		pros::screen::draw_rect(5 + x_addent, 200, 25+x_addent, 150);
+		pros::screen::set_pen(COLOR_BLUE);
+		pros::screen::draw_rect(5 + x_addent, 100, 25+x_addent, 50);
+		x_addent += 20;
+	}
+	// Add text for each button later, depending on number of rectangles
+}
 
 void opcontrol() {
 	Drivetrain const drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
@@ -27,6 +93,7 @@ void opcontrol() {
 
 	Robot robot{ drivetrain, flywheel, intake, expansion, roller};
 
+
 	while (true) {
 		robot.update();
 		pros::Task::delay(1);
@@ -34,15 +101,15 @@ void opcontrol() {
 }
 
 void autonomous() {
-	auto odometry = build_odometry(okapi::MotorGroup({okapi::Motor(-ports::LEFT_BACK_MOTOR), okapi::Motor(-ports::LEFT_FRONT_MOTOR)}), 
-								   okapi::MotorGroup({okapi::Motor(ports::RIGHT_BACK_MOTOR), okapi::Motor(ports::RIGHT_FRONT_MOTOR)}));
-
-	double const TILE_LENGTH = 21.92;
+	
 	double const ROLLER_LENGTH = TILE_LENGTH - 13.46;
 	
-	Flywheel m_flywheel (ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER);
-	
 	// Define parts to be manipulated
+	pros::Motor left_front(ports::LEFT_FRONT_MOTOR);
+	pros::Motor right_front(ports::RIGHT_FRONT_MOTOR);
+	pros::Motor left_back(ports::LEFT_BACK_MOTOR);
+	pros::Motor right_back(ports::RIGHT_BACK_MOTOR);
+	// pros::Motor_Group drivetrain({left_front, left_back, right_front, right_back});
 	Drivetrain  drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
 	Flywheel  flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
 	Expansion expansion {ports::EXPANSION_PISTON};
@@ -56,42 +123,22 @@ void autonomous() {
 
 	
 	pros::Task::delay(10); // just so that we don't start the second auton does
-	drivetrain.update(127, 0); // moves us forward at fastest speed
-
-	// rollers.move_velocity(150); turns on rollers, unnecessary
-
-	pros::Task::delay(1000);
-	// rollers.move_velocity(0); turns off rollers, unnecessary
-	drivetrain.update(0, 0); // drivetrain stops moving
-
-	pros::Task::delay(10); // transition phase
-
-	// moves the drivetrain backwards for 0.1 seconds
-	drivetrain.update(-127,0); 
-	pros::Task::delay(100);
-
-	// stops moving drivetrain
-	drivetrain.update(0,0); 
 	
-	// Low goals strategy 
-	
-	// m_flywheel.toggle_active(true);
-	// pros::Task::delay(5000);
-	// m_flywheel.shoot();
-	// pros::Task::delay(3500);
-	// m_flywheel.shoot();
-	// m_flywheel.toggle_active(true);
+	// roller_high_goals(roller, flywheel, drivetrain);
+	drivetrain.update(127,0); // real value: 107.115948
+	pros::Task::delay(millisecondsPerInch(5));
+	drivetrain.update(0,0);
+
+	drivetrain.update(0, 127);
+	pros::Task::delay(secondsPerAngle(90)); 
+	drivetrain.update(0,0);
 
 
-	// Future testing for angle turns
-
-	// motor_group.move_velocity(150);
-	// pros::Task::delay(3288);
-	// motor_group.move_velocity(0);
-	// ^ spin like 5 times and do (5 * 360)/x = 90 ----> t/x = time it takes to spin 90 degrees 
-
-
-
-
-	
+// 	drivetrain.update(0, -127);
+// 	pros::Task::delay(secondsPerAngle(90)); 
+// 	drivetrain.update(0,0);
 }
+
+
+
+
