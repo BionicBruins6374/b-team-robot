@@ -22,7 +22,31 @@
 double const TILE_LENGTH = 21.92;
 double const ROLLER_LENGTH = TILE_LENGTH - 13.46;
 
+uint64_t timeSinceEpochMillisec() {
+  using namespace std::chrono;
+  return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
 
+void test_spin(Drivetrain a_drivetrain, pros::Controller a_controller) {
+	// record time
+	uint64_t res1 = timeSinceEpochMillisec();
+	// while true
+	while (true) {
+		// spin bot in circle
+		a_drivetrain.update(107, 107);
+
+		// inside loop: if button b pressed: break out of loop
+		if (a_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+			break;
+	}
+	}
+	// record time, find difference
+	uint64_t res2 = timeSinceEpochMillisec();
+	while (true) {
+		// print that to the cortex and controller
+		a_controller.print(0,0, "TimeZ: %d", (res2-res1));		
+	}
+}
 
 double secondsPerAngle(double angle) {
 	return 1.17 * (angle/360) * 1000;  // 1.75 seconds/360 degrees UPDATED (*2/3)
@@ -101,6 +125,7 @@ void roller_high_goals(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivet
 	a_flywheel.disengage();
 }
 
+
 void low_goals(int disk_num, Flywheel a_flywheel) {
 	a_flywheel.toggle_active(true);
 	pros::Task::delay(5000);
@@ -149,7 +174,9 @@ void opcontrol() {
 
 	Robot robot{ drivetrain, flywheel, intake, expansion, roller};
 
-	
+	pros::Controller t_controller( pros::E_CONTROLLER_MASTER );
+
+	test_spin(drivetrain, t_controller);
 
 	while (true) {
 		robot.update();
