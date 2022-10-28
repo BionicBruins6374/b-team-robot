@@ -27,10 +27,8 @@ uint64_t timeSinceEpochMillisec() {
 }
 
 void test_spin(Drivetrain a_drivetrain, pros::Controller a_controller) {
-
 	// record time
 	uint64_t res1 = timeSinceEpochMillisec();
-
 	while (true) {
 		// spin bot in circle
 		a_drivetrain.update(107, 107);
@@ -42,7 +40,7 @@ void test_spin(Drivetrain a_drivetrain, pros::Controller a_controller) {
 	uint64_t res2 = timeSinceEpochMillisec();
 	while (true) {
 		// print that to the cortex and controller
-		a_controller.print(0,0, "TimeZ: %d", (res2-res1));		
+		a_controller.print(0,0, "Time: %d", (res2-res1));		
 	}
 }
 
@@ -51,18 +49,6 @@ double ms_per_angle(double angle) {
 }
 
 double ms_per_inch(double inches) {
-	// Math:
-	// 2 * pi * r = pi * d = length spun in 1.75 seconds
-	// d = sqrt(16.5354^2 + 18^2) = 24.4421655
-	// inches per 1.75 seconds (circumference of the circles being spun) = 76.7873276
-	// the "/" means "per" --> (ex) "1.75 seconds per 76.~~~~ inches"
-	// 1.75s / 76.7873276in = 0.0227902188s / 1 in = 1 in / 0.0227902188 s	
-	// first movement: TILE_LENGTH * 3 - 16.5354 
-	// in seconds: 1 in * (TILE_LENGTH * 3 - 16.5354 ) / 0.0227902188 s	* (TILE_LENGTH * 3 - 16.5354)
-	// first movement (in)  = 127 velocity for 1.1218394 seconds
-
-	// UPDATE: multiplied inches per second by 2/3 bc after testing we saw that it was moving
-	// 3 feet instead of two feet
 	return 0.0151934792 * inches * 1000;
 }
 
@@ -82,33 +68,30 @@ void low_goals(int disk_num, Flywheel a_flywheel) {
 }
 
 void spin_rollers(Drivetrain a_drivetrain) {
-	// moves bot forward at fastest speed
+	// Moves bot forward at fastest speed
 	a_drivetrain.update(127, 0); 
 	pros::Task::delay(1000);
 
-	// drivetrain stops moving
+	// Drivetrain stops moving
 	a_drivetrain.update(0, 0); 
 
 	pros::Task::delay(10); // transition phase
 
-	// moves the drivetrain backwards for 0.1 seconds
+	// Moves the drivetrain backwards for 0.1 seconds
 	a_drivetrain.update(-127,0); 
 	pros::Task::delay(100);
 
-	// stops moving drivetrain
+	// Stops moving drivetrain
 	a_drivetrain.update(0,0); 
-
-	return;
 }
 
 void roller_high_goals_purple(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivetrain) {
-
 	// Do rollers
 	spin_rollers(a_drivetrain);
 
-	// Move forward 3 TILES - 42cm (width of bot)
+	// Move backward 3 TILES - 42cm (width of bot)
 	double ms_three_tiles = ms_per_inch(TILE_LENGTH * 3 - 16.5354 );
-	a_drivetrain.update(127, 0);
+	a_drivetrain.update(-127, 0);
 	pros::Task::delay(ms_three_tiles/2);
 
 	// Turns on flywheel, flywheel begins preparing
@@ -123,12 +106,12 @@ void roller_high_goals_purple(Roller a_roller, Flywheel a_flywheel, Drivetrain a
 	a_drivetrain.update(0,0);
 
 	// Move forward 1 TILE
-	a_drivetrain.update(127, 0);
+	a_drivetrain.update(-127, 0);
 	pros::Task::delay(ms_per_inch(TILE_LENGTH)); 
 
 	// Turn left 130 DEGREES
 	a_drivetrain.update(0, -127);
-	pros::Task::delay(ms_per_angle(135) * 1000); // converts to milliseconds
+	pros::Task::delay(ms_per_angle(135)); // converts to milliseconds
 	a_drivetrain.update(0,0);
 
 	// Shoots the disks out of the flywheel twice, 5.5 seconds apart
@@ -233,26 +216,22 @@ void opcontrol() {
 
 void autonomous() {
 	
-	double const ROLLER_LENGTH = TILE_LENGTH - 13.46;
-	
 	// Define parts to be manipulated
-	Drivetrain  drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
-	Flywheel  flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
+	Drivetrain  drivetrain{ ports::LEFT_BACK_MOTOR, 
+	ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, 
+	ports::RIGHT_FRONT_MOTOR };
+	Flywheel  flywheel{ ports::FLYWHEEL_LEFT, 
+	ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
 	Expansion expansion {ports::EXPANSION_PISTON};
 	Intake  intake{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
 	Roller  roller{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
-
-	// Create roller group based on motors separately in order to do continuous spin 
-	pros::Motor roller_left(ports::INTAKE_LEFT);
-	pros::Motor roller_right(ports::INTAKE_RIGHT);
-	pros::Motor_Group rollers({roller_left, roller_right});
-
 	
 	pros::Task::delay(10); // Just so that we don't start the second auton does
 	
-	roller_high_goals_purple(roller, flywheel, drivetrain);
+	spin_rollers(drivetrain);
 
 }
+
 
 
 
