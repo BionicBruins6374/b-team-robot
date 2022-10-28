@@ -15,7 +15,6 @@
 #include "okapi/impl/device/motor/motorGroup.hpp"
 
 #include <chrono>
-// #include <Windows.h>
 #include <cstdint>
 
 
@@ -28,18 +27,17 @@ uint64_t timeSinceEpochMillisec() {
 }
 
 void test_spin(Drivetrain a_drivetrain, pros::Controller a_controller) {
+
 	// record time
 	uint64_t res1 = timeSinceEpochMillisec();
-	// while true
+
 	while (true) {
 		// spin bot in circle
 		a_drivetrain.update(107, 107);
-
 		// inside loop: if button b pressed: break out of loop
-		if (a_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-			break;
+		if (a_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { break; }
 	}
-	}
+	a_drivetrain.update(0,0);
 	// record time, find difference
 	uint64_t res2 = timeSinceEpochMillisec();
 	while (true) {
@@ -49,7 +47,7 @@ void test_spin(Drivetrain a_drivetrain, pros::Controller a_controller) {
 }
 
 double ms_per_angle(double angle) {
-	return 1.75 * (angle/360) * 1000;  // 1.75 seconds/360 degrees  ACTUALLY MILLISECONDS
+	return 7 * angle;  // 2523.3 milliseconds per 360 degrees with a_drivetrain.update(107, 107) 
 }
 
 double ms_per_inch(double inches) {
@@ -66,6 +64,21 @@ double ms_per_inch(double inches) {
 	// UPDATE: multiplied inches per second by 2/3 bc after testing we saw that it was moving
 	// 3 feet instead of two feet
 	return 0.0151934792 * inches * 1000;
+}
+
+void low_goals(int disk_num, Flywheel a_flywheel) {
+
+	// Turns on flywheel but doesn't let it fully 
+	// -> it won't shoot accurately/into high goals
+	a_flywheel.toggle_active(true);
+	pros::Task::delay(2000);
+
+	// Loops through numbers of disks: 
+	for (int i = 0 ; i < disk_num ; i ++) {
+		// Shoots disk and lets flywheel recover 
+		a_flywheel.shoot();
+		pros::Task::delay(1500);		
+	}
 }
 
 void spin_rollers(Drivetrain a_drivetrain) {
@@ -88,18 +101,21 @@ void spin_rollers(Drivetrain a_drivetrain) {
 	return;
 }
 
-void roller_high_goals(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivetrain) {
+void roller_high_goals_purple(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivetrain) {
 
 	// Do rollers
 	spin_rollers(a_drivetrain);
 
 	// Move forward 3 TILES - 42cm (width of bot)
+	double ms_three_tiles = ms_per_inch(TILE_LENGTH * 3 - 16.5354 );
 	a_drivetrain.update(127, 0);
-	pros::Task::delay(ms_per_inch(TILE_LENGTH * 3 - 16.5354 )); 
-	a_drivetrain.update(0,0);
+	pros::Task::delay(ms_three_tiles/2);
 
 	// Turns on flywheel, flywheel begins preparing
 	a_flywheel.toggle_active(true);
+
+	pros::Task::delay(ms_three_tiles/2);
+	a_drivetrain.update(0,0);
 
 	// Turn right 90 degrees, clockwise (right)
 	a_drivetrain.update(0, 127);
@@ -120,23 +136,52 @@ void roller_high_goals(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivet
 	pros::Task::delay(5500);
 	a_flywheel.shoot();
 	pros::Task::delay(20);
-
-	// Flywheel turns off
-	a_flywheel.disengage();
 }
 
+void roller_low_goals_green(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivetrain) {
+	// Spin rollers
+	spin_rollers(a_drivetrain);
 
-void low_goals(int disk_num, Flywheel a_flywheel) {
-	a_flywheel.toggle_active(true);
-	pros::Task::delay(5000);
+	// Move back 5 in
+	a_drivetrain.update(-127, 0);
+	pros::Task::delay(ms_per_inch(5));
+	a_drivetrain.update(0,0);
 
-	for (int i = 0 ; i < (disk_num+1) ; i ++) {
-		a_flywheel.shoot();
-		pros::Task::delay(3500);		
-	}
-	a_flywheel.disengage();
+	// Turn right 90 degrees
+	a_drivetrain.update(0, 107);
+	pros::Task::delay(ms_per_angle(90));
+	a_drivetrain.update(0,0);
+
+	// Move backwards to low goal for 1 TILE + 1/2 TILE + 3 in
+	a_drivetrain.update(-127, 0);
+	pros::Task::delay(ms_per_inch(TILE_LENGTH + 0.5 * TILE_LENGTH + 3));
+	a_drivetrain.update(0,0);
+
+	// Low goals flywheel shootie
+	low_goals(2, a_flywheel);
 
 }
+
+void double_rollers_pink(Roller a_roller, Drivetrain a_drivetrain) {
+	// Do rollers
+	spin_rollers(a_drivetrain);
+
+	// Move back 1/2 TILE + 1 in
+	a_drivetrain.update(-127, 0);
+	pros::Task::delay(ms_per_inch(0.5 * TILE_LENGTH + 1));
+	a_drivetrain.update(0,0);
+
+	// Turn right 90 degrees
+	a_drivetrain.update(0, 107);
+	pros::Task::delay(ms_per_angle(90));
+	a_drivetrain.update(0,0);
+
+	// Move forward 1 + 1/2 tile
+	a_drivetrain.update(127, 0);
+	pros::Task::delay(ms_per_inch(0.5 * TILE_LENGTH + TILE_LENGTH));
+	a_drivetrain.update(0,0);
+}
+
 void initialize() {
 	int x_addent = 0;
 	int y_addent = 100;
@@ -148,7 +193,9 @@ void initialize() {
 		x_addent += 20;
 	}
 }
+
 void disabled() {}
+
 void competition_initialize() {
 	// or make a list where each sublist is a line and each item inside the sublist is a function and its corresponding text
 	// use lambdas for input where u change from -1 to 1 RO JUST have a function that'll change it based ont eh value
@@ -189,11 +236,6 @@ void autonomous() {
 	double const ROLLER_LENGTH = TILE_LENGTH - 13.46;
 	
 	// Define parts to be manipulated
-	pros::Motor left_front(ports::LEFT_FRONT_MOTOR);
-	pros::Motor right_front(ports::RIGHT_FRONT_MOTOR);
-	pros::Motor left_back(ports::LEFT_BACK_MOTOR);
-	pros::Motor right_back(ports::RIGHT_BACK_MOTOR);
-	// pros::Motor_Group drivetrain({left_front, left_back, right_front, right_back});
 	Drivetrain  drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
 	Flywheel  flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
 	Expansion expansion {ports::EXPANSION_PISTON};
@@ -206,21 +248,10 @@ void autonomous() {
 	pros::Motor_Group rollers({roller_left, roller_right});
 
 	
-	pros::Task::delay(10); // just so that we don't start the second auton does
+	pros::Task::delay(10); // Just so that we don't start the second auton does
 	
-	// roller_high_goals(roller, flywheel, drivetrain);
-	drivetrain.update(127,0); // real value: 107.115948
-	pros::Task::delay(ms_per_inch(5));
-	drivetrain.update(0,0);
+	roller_high_goals_purple(roller, flywheel, drivetrain);
 
-	drivetrain.update(0, 127);
-	pros::Task::delay(ms_per_angle(90)); 
-	drivetrain.update(0,0);
-
-
-// 	drivetrain.update(0, -127);
-// 	pros::Task::delay(secondsPerAngle(90)); 
-// 	drivetrain.update(0,0);
 }
 
 
