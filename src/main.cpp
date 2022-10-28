@@ -44,6 +44,62 @@ double millisecondsPerInch(double inches) {
 	return 0.0151934792 * inches * 1000;
 }
 
+void spin_rollers(Drivetrain a_drivetrain) {
+	// moves bot forward at fastest speed
+	a_drivetrain.update(127, 0); 
+	pros::Task::delay(1000);
+
+	// drivetrain stops moving
+	a_drivetrain.update(0, 0); 
+
+	pros::Task::delay(10); // transition phase
+
+	// moves the drivetrain backwards for 0.1 seconds
+	a_drivetrain.update(-127,0); 
+	pros::Task::delay(100);
+
+	// stops moving drivetrain
+	a_drivetrain.update(0,0); 
+
+	return;
+}
+
+void roller_high_goals(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivetrain) {
+
+	// Do rollers
+	spin_rollers(a_drivetrain);
+
+	// Move forward 3 TILES - 42cm (width of bot)
+	a_drivetrain.update(127, 0);
+	pros::Task::delay(millisecondsPerInch(TILE_LENGTH * 3 - 16.5354 )); 
+	a_drivetrain.update(0,0);
+
+	// Turns on flywheel, flywheel begins preparing
+	a_flywheel.toggle_active(true);
+
+	// Turn right 90 degrees, clockwise (right)
+	a_drivetrain.update(0, 127);
+	pros::Task::delay(secondsPerAngle(90)); 
+	a_drivetrain.update(0,0);
+
+	// Move forward 1 TILE
+	a_drivetrain.update(127, 0);
+	pros::Task::delay(millisecondsPerInch(TILE_LENGTH)); 
+
+	// Turn left 130 DEGREES
+	a_drivetrain.update(0, -127);
+	pros::Task::delay(secondsPerAngle(135) * 1000); // converts to milliseconds
+	a_drivetrain.update(0,0);
+
+	// Shoots the disks out of the flywheel twice, 5.5 seconds apart
+	a_flywheel.shoot();
+	pros::Task::delay(5500);
+	a_flywheel.shoot();
+	pros::Task::delay(20);
+
+	// Flywheel turns off
+	a_flywheel.disengage();
+}
 
 void low_goals(int disk_num, Flywheel a_flywheel) {
 	a_flywheel.toggle_active(true);
@@ -93,6 +149,7 @@ void opcontrol() {
 
 	Robot robot{ drivetrain, flywheel, intake, expansion, roller};
 
+	
 
 	while (true) {
 		robot.update();
