@@ -163,6 +163,9 @@ void double_rollers_pink(Roller a_roller, Drivetrain a_drivetrain) {
 	a_drivetrain.update(127, 0);
 	pros::Task::delay(ms_per_inch(0.5 * TILE_LENGTH + TILE_LENGTH));
 	a_drivetrain.update(0,0);
+
+	// Do rollers
+	spin_rollers(a_drivetrain);
 }
 
 void initialize() {
