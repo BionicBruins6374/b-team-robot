@@ -48,11 +48,11 @@ void test_spin(Drivetrain a_drivetrain, pros::Controller a_controller) {
 	}
 }
 
-double secondsPerAngle(double angle) {
-	return 1.17 * (angle/360) * 1000;  // 1.75 seconds/360 degrees UPDATED (*2/3)
+double ms_per_angle(double angle) {
+	return 1.75 * (angle/360) * 1000;  // 1.75 seconds/360 degrees  ACTUALLY MILLISECONDS
 }
 
-double millisecondsPerInch(double inches) {
+double ms_per_inch(double inches) {
 	// Math:
 	// 2 * pi * r = pi * d = length spun in 1.75 seconds
 	// d = sqrt(16.5354^2 + 18^2) = 24.4421655
@@ -95,7 +95,7 @@ void roller_high_goals(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivet
 
 	// Move forward 3 TILES - 42cm (width of bot)
 	a_drivetrain.update(127, 0);
-	pros::Task::delay(millisecondsPerInch(TILE_LENGTH * 3 - 16.5354 )); 
+	pros::Task::delay(ms_per_inch(TILE_LENGTH * 3 - 16.5354 )); 
 	a_drivetrain.update(0,0);
 
 	// Turns on flywheel, flywheel begins preparing
@@ -103,16 +103,16 @@ void roller_high_goals(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivet
 
 	// Turn right 90 degrees, clockwise (right)
 	a_drivetrain.update(0, 127);
-	pros::Task::delay(secondsPerAngle(90)); 
+	pros::Task::delay(ms_per_angle(90)); 
 	a_drivetrain.update(0,0);
 
 	// Move forward 1 TILE
 	a_drivetrain.update(127, 0);
-	pros::Task::delay(millisecondsPerInch(TILE_LENGTH)); 
+	pros::Task::delay(ms_per_inch(TILE_LENGTH)); 
 
 	// Turn left 130 DEGREES
 	a_drivetrain.update(0, -127);
-	pros::Task::delay(secondsPerAngle(135) * 1000); // converts to milliseconds
+	pros::Task::delay(ms_per_angle(135) * 1000); // converts to milliseconds
 	a_drivetrain.update(0,0);
 
 	// Shoots the disks out of the flywheel twice, 5.5 seconds apart
@@ -210,11 +210,11 @@ void autonomous() {
 	
 	// roller_high_goals(roller, flywheel, drivetrain);
 	drivetrain.update(127,0); // real value: 107.115948
-	pros::Task::delay(millisecondsPerInch(5));
+	pros::Task::delay(ms_per_inch(5));
 	drivetrain.update(0,0);
 
 	drivetrain.update(0, 127);
-	pros::Task::delay(secondsPerAngle(90)); 
+	pros::Task::delay(ms_per_angle(90)); 
 	drivetrain.update(0,0);
 
 
