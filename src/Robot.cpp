@@ -13,13 +13,10 @@ void Robot::update_drivetrain() {
 }
 
 void Robot::update_flywheel() {
-	// if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-	// 	m_flywheel.aim(0);
-	// } 
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-		m_flywheel.aim(1);
+		m_flywheel.aim(0);
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-		m_flywheel.aim(2);
+		m_flywheel.aim(1);
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
 		m_flywheel.shoot();
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {

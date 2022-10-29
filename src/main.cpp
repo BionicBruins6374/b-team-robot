@@ -233,6 +233,11 @@ void autonomous() {
 	
 	spin_rollers(drivetrain);
 
+<<<<<<< HEAD
+=======
+	odometry->turnAngle(45_deg);
+	odometry->moveDistance(0.8333_ft);
+>>>>>>> 4e4238f (blah2)
 }
 
 
