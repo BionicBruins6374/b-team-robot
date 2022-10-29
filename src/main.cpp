@@ -70,6 +70,17 @@ void spin_rollers_v1(Drivetrain a_drivetrain, Roller a_roller) {
 	a_drivetrain.update(0,0); 
 }
 
+void spin_rollers_v2(std::shared_ptr<OdomChassisController> a_odom, Roller a_roller) {
+
+	a_roller.spin_wheel(true); 
+	a_odom->moveDistance(0.3333_ft); // 4 in
+	
+	// TODO: change this line based on how long it needs to spin for
+	pros::delay(900); 
+
+	a_roller.spin_wheel(false); 
+	a_odom->moveDistance(-0.3333_ft); // 4in
+}
 void purple_rollers_high(std::shared_ptr<OdomChassisController> a_odom, Drivetrain drivetrain, Flywheel a_flywheel, Roller a_roller) {
 	// Do rollers
 	spin_rollers_v1(drivetrain, a_roller);

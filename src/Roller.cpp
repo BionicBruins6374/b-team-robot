@@ -25,3 +25,15 @@ void Roller::fine_adjust(bool reverse) const {
 	pros::Task{ [] {pros::Task::delay(350);} };
 
 }
+
+void Roller::spin_wheel(bool on) const{
+	if (on) {
+		m_left_motor.move_velocity(100);
+		m_right_motor.move_velocity(100);
+	}
+
+	else {
+		m_left_motor.move_velocity(0);
+		m_right_motor.move_velocity(0);
+	}
+}
