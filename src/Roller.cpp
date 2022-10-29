@@ -22,6 +22,6 @@ void Roller::fine_adjust(bool reverse) const {
 		m_left_motor.move_relative(30, 80);
 		m_right_motor.move_relative(30, 80);
 	}
-	pros::Task{ [] {pros::Task::delay(50);} };
+	pros::Task{ [] {pros::Task::delay(350);} };
 
 }
