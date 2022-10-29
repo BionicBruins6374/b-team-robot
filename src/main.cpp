@@ -136,11 +136,20 @@ void autonomous() {
 	ports::RIGHT_FRONT_MOTOR };
 	Flywheel  flywheel{ ports::FLYWHEEL_LEFT, 
 	ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
+	Roller roller {ports::INTAKE_LEFT, ports::INTAKE_RIGHT};
 
 
-	// purple_rollers_high(odometry, drivetrain, flywheel);
-	// green_rollers_low(odometry, drivetrain, flywheel);
-	// pink_double_rollers(odometry, drivetrain);
+	// purple_rollers_high(odometry, drivetrain, flywheel, roller);
+	// green_rollers_low(odometry, drivetrain, flywheel, roller);
+	// pink_double_rollers(odometry, drivetrain, roller);
+
+	// // TODO: find time needed to flip rollers
+	// roller.spin_wheel(true);
+	// pros::Task::delay(4000);
+	// roller.spin_wheel(false);
+
+
+
 }
 
 
