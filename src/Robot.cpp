@@ -43,10 +43,14 @@ void Robot::update_expansion() {
 
 void Robot::update_roller() {
 	if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-		m_roller.fine_adjust(false);
+		m_roller.fine_adjust(Roller::FORWARD);
 	} else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-		m_roller.fine_adjust(true);
-	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+		m_roller.fine_adjust(Roller::FORWARD);
+	} else if (!m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+		m_roller.fine_adjust(Roller::FORWARD);
+	}
+
+	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
 		m_roller.switch_color();
 	}
 }

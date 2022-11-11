@@ -12,18 +12,21 @@ void Roller::switch_color() const {
 	m_right_motor.move_relative(540, 100);
 }
 
-void Roller::fine_adjust(bool reverse) const {
-	if (reverse) {
-		// move at a slow pace backwards
-		m_left_motor.move_relative(-30, 80);
-		m_right_motor.move_relative(-30, 80);
-	} else {
-		// move at a slow pace forward
-		m_left_motor.move_relative(30, 80);
-		m_right_motor.move_relative(30, 80);
-	}
-	pros::Task{ [] {pros::Task::delay(350);} };
-
+void Roller::fine_adjust(RollerCode code) const {
+	switch (code) {
+		case FORWARD:
+			m_left_motor.move_velocity(30);
+			m_right_motor.move_velocity(30);
+			break;
+		case BACKWARD:
+			m_left_motor.move_velocity(-30);
+			m_right_motor.move_velocity(-30);
+			break;
+		case STOP:
+			m_left_motor.move_velocity(0);
+			m_right_motor.move_velocity(0);
+			break;
+	};
 }
 
 void Roller::spin_wheel(bool on) const{

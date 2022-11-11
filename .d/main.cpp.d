@@ -1,8 +1,8 @@
 bin/main.cpp.o: src/main.cpp include/pros/rtos.hpp include/pros/rtos.h \
- include/pros/vision.hpp include/pros/vision.h include/Flywheel.hpp \
- include/pros/adi.hpp include/pros/adi.h include/pros/motors.hpp \
- include/pros/motors.h include/Robot.hpp include/pros/misc.hpp \
- include/pros/misc.h include/Drivetrain.hpp include/Intake.hpp \
+ include/pros/vision.hpp include/pros/vision.h include/Drivetrain.hpp \
+ include/pros/motors.hpp include/pros/motors.h include/Flywheel.hpp \
+ include/pros/adi.hpp include/pros/adi.h include/Robot.hpp \
+ include/pros/misc.hpp include/pros/misc.h include/Intake.hpp \
  include/Expansion.hpp include/Roller.hpp include/main.hpp \
  include/ports.hpp include/odometry.hpp \
  include/okapi/impl/chassis/controller/chassisControllerBuilder.hpp \
@@ -132,15 +132,15 @@ include/pros/rtos.hpp:
 include/pros/rtos.h:
 include/pros/vision.hpp:
 include/pros/vision.h:
+include/Drivetrain.hpp:
+include/pros/motors.hpp:
+include/pros/motors.h:
 include/Flywheel.hpp:
 include/pros/adi.hpp:
 include/pros/adi.h:
-include/pros/motors.hpp:
-include/pros/motors.h:
 include/Robot.hpp:
 include/pros/misc.hpp:
 include/pros/misc.h:
-include/Drivetrain.hpp:
 include/Intake.hpp:
 include/Expansion.hpp:
 include/Roller.hpp:
