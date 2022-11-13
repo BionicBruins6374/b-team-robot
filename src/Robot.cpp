@@ -29,11 +29,11 @@ void Robot::update_flywheel() {
 }
 
 void Robot::update_intake() {
-	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
 		m_intake.toggle(false);
 		m_roller.spin();
 	}
-	else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+	else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 		m_intake.toggle(true);
 	}
 }
@@ -45,11 +45,6 @@ void Robot::update_expansion() {
 }
 
 void Robot::update_roller() {
-	// if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-	// 	m_roller.fine_adjust(false);
-	// } else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-	// 	m_roller.fine_adjust(true);
-	// }
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
 		m_roller.switch_color();
 	}
