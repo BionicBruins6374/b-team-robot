@@ -11,6 +11,7 @@ private:
 
 	bool m_on = false;
 	bool m_reverse = true;
+	
 public:
 	Flywheel(int8_t const left_port, int8_t const right_port, int8_t const piston_port);
 
@@ -30,4 +31,12 @@ public:
 	void shoot() const;
 
 	int32_t reverse_velocity(int32_t const velocity) const;
+
+	bool high_voltage = true;
+
+	void switch_voltage(int voltage) ;
+
+	void toggle_active_slower(bool const reverse);
+
+	
 };

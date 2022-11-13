@@ -7,7 +7,7 @@
 #include "constants.hpp"
 
 Flywheel::Flywheel(int8_t const left_port, int8_t const right_port, int8_t const piston_port)
-	: m_left_motor{ left_port, true }, m_right_motor{ right_port}, m_piston{ piston_port } {}
+	: m_left_motor{ left_port, true }, m_right_motor{ right_port}, m_piston{ static_cast<uint8_t>(piston_port) } {}
 
 void Flywheel::spin_up() {
 	m_left_motor.move_velocity(reverse_velocity(constants::FLYWHEEL_VELOCITIES[1]));
@@ -26,6 +26,18 @@ void Flywheel::toggle_active(bool const reverse) {
 		disengage();
 		m_reverse = false;
 	} else {
+		m_reverse = reverse;
+		spin_up();
+	}
+}
+
+void Flywheel::toggle_active_slower(bool const reverse) {
+	if (m_on) {
+		disengage();
+		m_reverse = false;
+	} else {
+		switch_voltage(-7000);
+
 		m_reverse = reverse;
 		spin_up();
 	}
@@ -53,4 +65,16 @@ int32_t Flywheel::reverse_velocity(int32_t const velocity) const {
 		return -1 * velocity;
 	}
 	return velocity;
+}
+
+// int32_t Flywheel::get_voltage() const {
+// 	return m_right_motor.get_voltage_limit();
+// }
+
+void Flywheel::switch_voltage(int voltage)  {
+	
+		m_left_motor.move_voltage(voltage);
+		m_right_motor.move_voltage(voltage);
+
+	return;
 }

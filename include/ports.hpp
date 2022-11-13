@@ -17,4 +17,5 @@ constexpr int8_t LEFT_FRONT_MOTOR = 10;
 constexpr int8_t RIGHT_FRONT_MOTOR = 9;
 constexpr int8_t INTAKE_LEFT = 13;
 constexpr int8_t INTAKE_RIGHT = 5;
+constexpr int8_t INTAKE_UP = 19;
 }  // namespace ports

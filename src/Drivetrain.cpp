@@ -1,4 +1,5 @@
 #include <cmath>
+#include <vector>
 
 #include "Drivetrain.hpp"
 
@@ -49,4 +50,9 @@ void Drivetrain::next_reference_frame() {
 			m_reference_frame = DrivetrainReferenceFrame::IntakeAtFront;
 			break;
 	}
+}
+
+std::vector<double> Drivetrain::motor_velocities() {
+	pros::Motor_Group drive ({m_right_back_motor, m_right_front_motor, m_left_back_motor, m_left_front_motor});
+	return drive.get_actual_velocities();
 }

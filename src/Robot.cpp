@@ -20,15 +20,18 @@ void Robot::update_flywheel() {
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
 		m_flywheel.shoot();
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-		m_flywheel.toggle_active(false);
+		// m_flywheel.toggle_active(false);
+		m_flywheel.toggle_active_slower(true);
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
 		m_flywheel.toggle_active(true);
 	}
+	// m_controller.print(1,0, "voltage: %d", m_flywheel.get_voltage() );	
 }
 
 void Robot::update_intake() {
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
 		m_intake.toggle(false);
+		m_roller.spin();
 	}
 	else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
 		m_intake.toggle(true);
@@ -42,11 +45,12 @@ void Robot::update_expansion() {
 }
 
 void Robot::update_roller() {
-	if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-		m_roller.fine_adjust(false);
-	} else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-		m_roller.fine_adjust(true);
-	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+	// if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+	// 	m_roller.fine_adjust(false);
+	// } else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+	// 	m_roller.fine_adjust(true);
+	// }
+	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
 		m_roller.switch_color();
 	}
 }
