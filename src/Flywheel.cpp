@@ -21,12 +21,13 @@ void Flywheel::disengage() {
 	m_on = false;
 }
 
- 
+
 bool Flywheel::toggle_active(bool const reverse, bool const slower_voltage) {
 	if (m_on) {
 		disengage();
 		m_reverse = false;
 	} else {
+
 		if (slower_voltage) {
 			set_voltage(-7000);
 		}
@@ -37,7 +38,7 @@ bool Flywheel::toggle_active(bool const reverse, bool const slower_voltage) {
 		spin_up();
 	}
 
-	return true;
+	return m_on;
 }
 
 

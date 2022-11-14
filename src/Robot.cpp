@@ -5,13 +5,6 @@
 Robot::Robot(Drivetrain drivetrain, Flywheel flywheel, Intake intake, Expansion expansion, Roller roller)
 	: m_drivetrain(drivetrain), m_flywheel(flywheel), m_intake(intake), m_expansion(expansion), m_roller(roller) {}
 
-void Robot::update_drivetrain() {
-	m_drivetrain.update(m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
-	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-		m_drivetrain.next_reference_frame();
-	}
-}
-
 void Robot::update_flywheel() {
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
 		m_flywheel.aim(0);
@@ -20,12 +13,22 @@ void Robot::update_flywheel() {
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
 		m_flywheel.shoot();
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-		m_flywheel.toggle_active(true, true);
+		flywheel_on = m_flywheel.toggle_active(true, true);
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
-		m_flywheel.toggle_active(true, false);
+		flywheel_on = m_flywheel.toggle_active(true, false);
 	}
 	m_controller.print(5,0, "voltage: %d", 20 );	
 }
+
+
+void Robot::update_drivetrain() {
+	m_drivetrain.update(m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
+	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B) || (flywheel_on && !m_drivetrain.flywheel_front())) {
+		m_drivetrain.next_reference_frame();
+	}
+}
+
+
 
 void Robot::update_intake() {
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {

@@ -18,6 +18,8 @@ private:
 	Expansion m_expansion;
 	Roller m_roller;
 
+	bool flywheel_on;
+
 	void update_drivetrain();
 	void update_flywheel();
 	void update_intake();

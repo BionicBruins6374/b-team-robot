@@ -52,6 +52,13 @@ void Drivetrain::next_reference_frame() {
 	}
 }
 
+bool Drivetrain::flywheel_front() {
+	if (m_reference_frame == DrivetrainReferenceFrame::FlywheelAtFront) {
+		return true;
+	}
+	return false;
+}
+
 std::vector<double> Drivetrain::motor_velocities() {
 	pros::Motor_Group drive ({m_right_back_motor, m_right_front_motor, m_left_back_motor, m_left_front_motor});
 	return drive.get_actual_velocities();

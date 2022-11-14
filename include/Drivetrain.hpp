@@ -20,4 +20,5 @@ public:
 	void update(int32_t forward_backward_axis, int32_t left_right_axis);
 	void next_reference_frame();
 	std::vector<double> motor_velocities();
+	bool flywheel_front();
 };
