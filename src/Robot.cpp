@@ -12,6 +12,8 @@ Robot::Robot(Drivetrain drivetrain, Flywheel flywheel, Intake intake, Expansion 
 
 bool Robot::update_flywheel() {
 
+	flywheel_turned_on = false;
+	
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
 		m_flywheel.aim(0);
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
