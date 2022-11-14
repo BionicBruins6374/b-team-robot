@@ -162,7 +162,7 @@ void roller_high_goals(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivet
 	moveAngle(135, a_drivetrain, 1);
 
 	// Turns on flywheel, flywheel begins preparing
-	a_flywheel.toggle_active(true);
+	a_flywheel.toggle_active(true, false);
 
 	// Move forward 3.2 TILES (width of bot)
 	moveInches(TILE_LENGTH * 3.2, a_drivetrain, 1);
@@ -181,7 +181,7 @@ void roller_high_goals(Roller a_roller, Flywheel a_flywheel, Drivetrain a_drivet
 
 
 void low_goals(int disk_num, Flywheel a_flywheel) {
-	a_flywheel.toggle_active(true);
+	a_flywheel.toggle_active(true, true);
 	pros::Task::delay(5000);
 
 	for (int i = 0 ; i < (disk_num+1) ; i ++) {
@@ -265,7 +265,7 @@ void autonomous() {
 	
 	
 	// roller_high_goals(roller, flywheel, drivetrain);
-	// moveInches(24, drivetrain, -1);
+	// moveInches(TILE_LENGTH*3, drivetrain, -1);
 	
 }
 

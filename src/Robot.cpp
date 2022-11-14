@@ -20,12 +20,11 @@ void Robot::update_flywheel() {
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
 		m_flywheel.shoot();
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-		// m_flywheel.toggle_active(false);
-		m_flywheel.toggle_active_slower(true);
+		m_flywheel.toggle_active(true, true);
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
-		m_flywheel.toggle_active(true);
+		m_flywheel.toggle_active(true, false);
 	}
-	// m_controller.print(1,0, "voltage: %d", m_flywheel.get_voltage() );	
+	m_controller.print(5,0, "voltage: %d", 20 );	
 }
 
 void Robot::update_intake() {

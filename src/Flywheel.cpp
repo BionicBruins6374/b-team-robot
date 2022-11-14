@@ -21,27 +21,25 @@ void Flywheel::disengage() {
 	m_on = false;
 }
 
-void Flywheel::toggle_active(bool const reverse) {
+ 
+bool Flywheel::toggle_active(bool const reverse, bool const slower_voltage) {
 	if (m_on) {
 		disengage();
 		m_reverse = false;
 	} else {
+		if (slower_voltage) {
+			set_voltage(-7000);
+		}
+		else {
+			set_voltage(-10000);
+		}
 		m_reverse = reverse;
 		spin_up();
 	}
+
+	return true;
 }
 
-void Flywheel::toggle_active_slower(bool const reverse) {
-	if (m_on) {
-		disengage();
-		m_reverse = false;
-	} else {
-		switch_voltage(-7000);
-
-		m_reverse = reverse;
-		spin_up();
-	}
-}
 
 void Flywheel::aim(uint8_t const velocity_option) {
 	m_on = true;
@@ -67,11 +65,8 @@ int32_t Flywheel::reverse_velocity(int32_t const velocity) const {
 	return velocity;
 }
 
-// int32_t Flywheel::get_voltage() const {
-// 	return m_right_motor.get_voltage_limit();
-// }
 
-void Flywheel::switch_voltage(int voltage)  {
+void Flywheel::set_voltage(int voltage)  {
 	
 		m_left_motor.move_voltage(voltage);
 		m_right_motor.move_voltage(voltage);

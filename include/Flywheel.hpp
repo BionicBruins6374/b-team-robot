@@ -22,21 +22,21 @@ public:
 	void disengage();
 
 	// toggle active state of flywheel
-	void toggle_active(bool const reverse);
+	bool toggle_active(bool const reverse, bool const slower_voltage);
 
 	// sets the flywheel velocity based on distance to the high goal
 	void aim(uint8_t const velocity_option);
 
 	// engages the piston to shoot a stored disc
 	void shoot() const;
+	
+	// sets internal voltage, used to modify flywheel for range
+	void set_voltage(int voltage) ;
 
 	int32_t reverse_velocity(int32_t const velocity) const;
 
-	bool high_voltage = true;
 
-	void switch_voltage(int voltage) ;
-
-	void toggle_active_slower(bool const reverse);
+	
 
 	
 };
