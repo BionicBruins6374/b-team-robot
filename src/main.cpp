@@ -231,10 +231,13 @@ void opcontrol() {
 	pros::Controller t_controller( pros::E_CONTROLLER_MASTER );
 
 	// test_spin(drivetrain, t_controller, flywheel);
-
+	bool flyie = false;
 	while (true) {
-		robot.update();
+		flyie = robot.update();
 		pros::Task::delay(1);
+		t_controller.print(0, 0, "flyie: %d", flyie);
+		t_controller.print(0, 0, "YOOOO");
+
 	}
 }
 

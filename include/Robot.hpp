@@ -18,14 +18,15 @@ private:
 	Expansion m_expansion;
 	Roller m_roller;
 
-	bool flywheel_on;
+	bool flywheel_turned_on = false;
 
-	void update_drivetrain();
-	void update_flywheel();
+	bool update_drivetrain(bool flywheel_on);
+	bool update_flywheel();
 	void update_intake();
 	void update_expansion();
 	void update_roller();
+	
 public:
 	Robot(Drivetrain drivetrain, Flywheel flywheel, Intake intake, Expansion expansion, Roller roller);
-	void update();
+	bool update();
 };

@@ -24,6 +24,7 @@ int32_t Drivetrain::polarize(int32_t metric) {
 			return metric * -1;
 			break;
 	}
+	return 0;
 }
 void Drivetrain::update(int32_t forward_backward_axis_int, int32_t left_right_axis_int) {
 	forward_backward_axis_int = polarize(forward_backward_axis_int);
@@ -72,6 +73,7 @@ std::vector<double> Drivetrain::motor_velocities() {
 	pros::Motor_Group drive ({m_right_back_motor, m_right_front_motor, m_left_back_motor, m_left_front_motor});
 	return drive.get_actual_velocities();
 }
+
 double Drivetrain::get_voltage() {
 	pros::Motor motors [4] = {m_right_back_motor, m_right_front_motor, m_left_back_motor, m_left_front_motor};
 	double average = 0;
@@ -83,4 +85,13 @@ double Drivetrain::get_voltage() {
 	
 	return average / motor_num;
 
+}
+
+void Drivetrain::set_front(int front) {
+	if (front == 0) {
+		m_reference_frame =  DrivetrainReferenceFrame::IntakeAtFront;
+	}
+	else {
+		m_reference_frame =  DrivetrainReferenceFrame::FlywheelAtFront;
+	}
 }

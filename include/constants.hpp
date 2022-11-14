@@ -10,5 +10,5 @@ constexpr float DRIVE_MAX_VELOCITY = 200.0f;  // fastest drivetrain velocity
 constexpr int32_t FLYWHEEL_VELOCITIES[3] = {100, 200};  // constant flywheel velocities to choose from
 constexpr uint32_t PISTON_DELAY_TIME = 250;  // number of milliseconds to wait between extension and retraction of piston indexer
 constexpr int32_t INTAKE_VELOCITY = 200; // intake motor velocity
-constexpr float SLOWER_DRIVETRAIN = 9000; // relative slowed amnt
+constexpr float SLOWER_DRIVETRAIN = 3000; // relative slowed amnt
 }  // namespace constants

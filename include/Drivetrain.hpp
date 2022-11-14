@@ -20,8 +20,12 @@ public:
 	int32_t polarize(int32_t metric);
 	void update(int32_t forward_backward_axis, int32_t left_right_axis);
 	void next_reference_frame();
-	std::vector<double> motor_velocities();
+	
 	bool flywheel_front();
 	void modify_voltage(int16_t voltage);
+
+	void set_front(int front);
+	
 	double get_voltage(); // returns the average voltage between the 4 motors
+	std::vector<double> motor_velocities();
 };
