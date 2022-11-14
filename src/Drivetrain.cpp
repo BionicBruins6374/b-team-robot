@@ -15,15 +15,19 @@ static float scale(float const raw) {
 	return std::pow(raw / constants::CONTROLLER_ANALOG_MAX, 3.0f) * constants::DRIVE_MAX_VELOCITY * constants::DRIVE_DAMPENING;
 }
 
-void Drivetrain::update(int32_t forward_backward_axis_int, int32_t left_right_axis_int) {
+int32_t Drivetrain::polarize(int32_t metric) {
 	switch (m_reference_frame) {
 		case DrivetrainReferenceFrame::IntakeAtFront:
+			return metric;
 			break;
 		case DrivetrainReferenceFrame::FlywheelAtFront:
-			forward_backward_axis_int *= -1;
-			left_right_axis_int *= 1;
+			return metric * -1;
 			break;
 	}
+}
+void Drivetrain::update(int32_t forward_backward_axis_int, int32_t left_right_axis_int) {
+	forward_backward_axis_int = polarize(forward_backward_axis_int);
+	left_right_axis_int = polarize(left_right_axis_int);
 
 	auto forward_backward_axis = static_cast<float>(forward_backward_axis_int);
 	auto left_right_axis = static_cast<float>(left_right_axis_int);
@@ -59,7 +63,24 @@ bool Drivetrain::flywheel_front() {
 	return false;
 }
 
+void Drivetrain::modify_voltage(int16_t voltage) {
+	pros::Motor_Group drivetrain ({m_right_back_motor, m_right_front_motor, m_left_back_motor, m_left_front_motor});
+	drivetrain.move_voltage(polarize(voltage));
+}
+
 std::vector<double> Drivetrain::motor_velocities() {
 	pros::Motor_Group drive ({m_right_back_motor, m_right_front_motor, m_left_back_motor, m_left_front_motor});
 	return drive.get_actual_velocities();
+}
+double Drivetrain::get_voltage() {
+	pros::Motor motors [4] = {m_right_back_motor, m_right_front_motor, m_left_back_motor, m_left_front_motor};
+	double average = 0;
+	int8_t motor_num = sizeof(motors) / sizeof(pros::Motor);
+
+	for (int i = 0; i < motor_num; i++) {
+		average += motors[i].get_actual_velocity();
+	}
+	
+	return average / motor_num;
+
 }

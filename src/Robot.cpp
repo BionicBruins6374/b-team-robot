@@ -1,3 +1,4 @@
+#include "constants.hpp"
 #include "pros/misc.h"
 #include <iostream>
 #include "Robot.hpp"
@@ -26,7 +27,15 @@ void Robot::update_drivetrain() {
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B) || (flywheel_on && !m_drivetrain.flywheel_front())) {
 		m_drivetrain.next_reference_frame();
 	}
+	// update later to only change the voltage if the voltage isn't in like a 10 percent range of the specified volts
+	double current_volts = m_drivetrain.get_voltage(); 
+	if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+		// if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && (current_volts * 0.92 <= constants::SLOWER_DRIVETRAIN && constants::SLOWER_DRIVETRAIN <= current_volts * 1.08)) {
+		m_drivetrain.modify_voltage(constants::SLOWER_DRIVETRAIN);
+	}
+	
 }
+
 
 
 

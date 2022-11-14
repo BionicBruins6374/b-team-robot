@@ -17,8 +17,11 @@ private:
 	DrivetrainReferenceFrame m_reference_frame = DrivetrainReferenceFrame::IntakeAtFront;
 public:
 	Drivetrain(int8_t left_back_motor_port, int8_t right_back_motor_port, int8_t left_front_motor_port, int8_t right_front_motor_port);
+	int32_t polarize(int32_t metric);
 	void update(int32_t forward_backward_axis, int32_t left_right_axis);
 	void next_reference_frame();
 	std::vector<double> motor_velocities();
 	bool flywheel_front();
+	void modify_voltage(int16_t voltage);
+	double get_voltage(); // returns the average voltage between the 4 motors
 };
