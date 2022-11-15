@@ -32,11 +32,6 @@ bool Robot::update_flywheel() {
 
 bool Robot::update_drivetrain(bool flywheel_on) {
 	m_drivetrain.update(m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
-	// bool flyie = false;
-	// if (flywheel_on && !m_drivetrain.flywheel_front()) {
-	// 	m_drivetrain.next_reference_frame();
-	// 	flyie = true;
-	// }
 
 	if (flywheel_on) {
 		m_drivetrain.set_front(1);
@@ -49,7 +44,7 @@ bool Robot::update_drivetrain(bool flywheel_on) {
 	
 	// update later to only change the voltage if the voltage isn't in like a 10 percent range of the specified volts
 	double current_volts = m_drivetrain.get_voltage(); 
-	if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+	if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && !(current_volts * 0.92 <= constants::SLOWER_DRIVETRAIN && constants::SLOWER_DRIVETRAIN <= current_volts * 1.08)) {
 		// if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && (current_volts * 0.92 <= constants::SLOWER_DRIVETRAIN && constants::SLOWER_DRIVETRAIN <= current_volts * 1.08)) {
 		m_drivetrain.modify_voltage(constants::SLOWER_DRIVETRAIN);
 	}

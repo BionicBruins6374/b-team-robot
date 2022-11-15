@@ -65,8 +65,7 @@ bool Drivetrain::flywheel_front() {
 }
 
 void Drivetrain::modify_voltage(int16_t voltage) {
-	pros::Motor_Group drivetrain ({m_right_back_motor, m_right_front_motor, m_left_back_motor, m_left_front_motor});
-	drivetrain.move_voltage(polarize(voltage));
+	for (int i = 0; i < motor_num; i++) { motors[i].move_voltage(polarize(voltage)); }
 }
 
 std::vector<double> Drivetrain::motor_velocities() {
@@ -75,14 +74,8 @@ std::vector<double> Drivetrain::motor_velocities() {
 }
 
 double Drivetrain::get_voltage() {
-	pros::Motor motors [4] = {m_right_back_motor, m_right_front_motor, m_left_back_motor, m_left_front_motor};
 	double average = 0;
-	int8_t motor_num = sizeof(motors) / sizeof(pros::Motor);
-
-	for (int i = 0; i < motor_num; i++) {
-		average += motors[i].get_actual_velocity();
-	}
-	
+	for (int i = 0; i < motor_num; i++) { average += motors[i].get_actual_velocity(); }
 	return average / motor_num;
 
 }
