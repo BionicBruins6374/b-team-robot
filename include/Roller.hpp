@@ -5,8 +5,8 @@
 
 class Roller {
 private:
-	pros::Motor m_left_motor;
-	pros::Motor m_right_motor;
+	pros::Motor m_motor;
+	bool m_on = false;
 
 public:
 	enum RollerCode {
@@ -15,8 +15,8 @@ public:
 		STOP = 2
 	};
 
-	Roller(int8_t const left_port, int8_t const right_port);
+	Roller(int8_t const port);
 	void switch_color() const;
-	void fine_adjust(RollerCode code) const;
+	void fine_adjust(RollerCode code);
 	void spin_wheel(bool on) const;	
 };

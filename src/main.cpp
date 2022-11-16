@@ -21,10 +21,10 @@ void competition_initialize() {}
 
 void opcontrol() {
 	Drivetrain const drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
-	Flywheel const flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
+	Flywheel const flywheel{ ports::FLYWHEEL, ports::PISTON_INDEXER };
 	Intake const intake{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
 	Expansion const expansion{ ports::EXPANSION_PISTON };
-	Roller const roller {ports::INTAKE_LEFT, ports::INTAKE_RIGHT};
+	Roller const roller { ports::ROLLER };
 	Robot robot{ drivetrain, flywheel, intake, expansion, roller};
 
 	while (true) {

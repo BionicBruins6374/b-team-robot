@@ -9,28 +9,32 @@ void Robot::update_drivetrain() {
 	m_drivetrain.update(m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
 		m_drivetrain.next_reference_frame();
+	} else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+		m_drivetrain.update(80, 0);
 	}
 }
 
 void Robot::update_flywheel() {
-	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+	int32_t temp_voltage = m_flywheel.m_voltage;
+
+	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
 		m_flywheel.aim(0);
-	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
 		m_flywheel.aim(1);
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
 		m_flywheel.shoot();
-	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-		m_flywheel.toggle_active(false);
-	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
-		m_flywheel.toggle_active(true);
+	}
+
+	if ((temp_voltage == 0 && (m_flywheel.m_voltage > 0)) || (temp_voltage > 0 && (m_flywheel.m_voltage == 0))) {
+		m_drivetrain.next_reference_frame();
 	}
 }
 
 void Robot::update_intake() {
-	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
 		m_intake.toggle(false);
 	}
-	else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+	else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 		m_intake.toggle(true);
 	}
 }
@@ -42,15 +46,15 @@ void Robot::update_expansion() {
 }
 
 void Robot::update_roller() {
-	if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+	if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
 		m_roller.fine_adjust(Roller::FORWARD);
-	} else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-		m_roller.fine_adjust(Roller::FORWARD);
-	} else if (!m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-		m_roller.fine_adjust(Roller::FORWARD);
+	} else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+		m_roller.fine_adjust(Roller::BACKWARD);
+	} else if (!m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP) && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+		m_roller.fine_adjust(Roller::STOP);
 	}
 
-	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
 		m_roller.switch_color();
 	}
 }
