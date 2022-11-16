@@ -11,7 +11,8 @@ Robot::Robot(Drivetrain drivetrain, Flywheel flywheel, Intake intake, Expansion 
 
 
 bool Robot::update_flywheel() {
-
+	static bool R2click = false;
+	static bool R1click = false;
 	flywheel_turned_on = false;
 	
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
@@ -21,9 +22,28 @@ bool Robot::update_flywheel() {
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
 		m_flywheel.shoot();
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-		flywheel_turned_on = m_flywheel.toggle_active(true, true);
+		if (R2click) {
+			R2click = false;
+			R1click = false;
+			
+			flywheel_turned_on = m_flywheel.toggle_active(true, true);
+			return flywheel_turned_on;
+		} 
+
+		flywheel_turned_on = true;
+		m_flywheel.set_voltage(constants::SLOWER_DRIVETRAIN);
+		R2click = true;
 	} else if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+		if (R1click) {
+			R1click = false;
+			R2click = false;
+
+			flywheel_turned_on = m_flywheel.toggle_active(true, false);
+			return flywheel_turned_on;
+		}
+
 		flywheel_turned_on = m_flywheel.toggle_active(true, false);
+		R1click = true;
 	}
 	m_controller.print(5,0, "voltage: %d", 20 );	
 	return flywheel_turned_on;
