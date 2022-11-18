@@ -377,7 +377,6 @@ void high_goal_sole(std::shared_ptr<okapi::OdomChassisController> odometry, Flyw
 
 // starting at the roller where we can't directly touch it
 void high_goal_roller_indirect(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, Intake intake) {
-	// odometry->turnAngle(5_deg);
 	odometry->moveDistance(1_ft * TILE_LENGTH);
 	odometry->turnAngle(-90_deg);
 	spin_rollers_v1(drivetrain, roller);
@@ -407,37 +406,7 @@ void autonomous() {
 
 
 
-// void autonomous() {
-	
-// 	double const ROLLER_LENGTH = TILE_LENGTH - 13.46;
-	
-// 	// Define parts to be manipulated
-// 	pros::Motor left_front(ports::LEFT_FRONT_MOTOR);
-// 	pros::Motor right_front(ports::RIGHT_FRONT_MOTOR);
-// 	pros::Motor left_back(ports::LEFT_BACK_MOTOR);
-// 	pros::Motor right_back(ports::RIGHT_BACK_MOTOR);
-// 	// pros::Motor_Group drivetrain({left_front, left_back, right_front, right_back});
-// 	Drivetrain  drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
-// 	Flywheel  flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
-// 	Expansion expansion {ports::EXPANSION_PISTON};
-// 	Intake  intake{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
-// 	Roller  roller{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT, ports::INTAKE_UP };
 
-// 	// Create roller group based on motors separately in order to do continuous spin 
-// 	pros::Motor roller_left(ports::INTAKE_LEFT);
-// 	pros::Motor roller_right(ports::INTAKE_RIGHT);
-// 	pros::Motor_Group rollers({roller_left, roller_right});
-
-	
-// 	pros::Task::delay(10); // just so that we don't start the second auton does
-	
-	
-
-
-// 	// roller_high_goals(roller, flywheel, drivetrain);
-// 	// moveInches(TILE_LENGTH*3, drivetrain, -1);
-	
-// }
 
 
 
