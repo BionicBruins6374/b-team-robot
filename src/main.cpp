@@ -24,7 +24,7 @@
 
 
 
-double const TILE_LENGTH = 21.92;
+double const TILE_LENGTH = 1.8266667; // feet
 double const ROLLER_LENGTH = TILE_LENGTH - 13.46;
 
 uint64_t timeSinceEpochMillisec() {
@@ -241,37 +241,203 @@ void opcontrol() {
 	}
 }
 
-void autonomous() {
-	
-	double const ROLLER_LENGTH = TILE_LENGTH - 13.46;
-	
-	// Define parts to be manipulated
-	pros::Motor left_front(ports::LEFT_FRONT_MOTOR);
-	pros::Motor right_front(ports::RIGHT_FRONT_MOTOR);
-	pros::Motor left_back(ports::LEFT_BACK_MOTOR);
-	pros::Motor right_back(ports::RIGHT_BACK_MOTOR);
-	// pros::Motor_Group drivetrain({left_front, left_back, right_front, right_back});
-	Drivetrain  drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
-	Flywheel  flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
-	Expansion expansion {ports::EXPANSION_PISTON};
-	Intake  intake{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
-	Roller  roller{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT, ports::INTAKE_UP };
-
-	// Create roller group based on motors separately in order to do continuous spin 
-	pros::Motor roller_left(ports::INTAKE_LEFT);
-	pros::Motor roller_right(ports::INTAKE_RIGHT);
-	pros::Motor_Group rollers({roller_left, roller_right});
-
-	
-	pros::Task::delay(10); // just so that we don't start the second auton does
-	
-	
 
 
-	// roller_high_goals(roller, flywheel, drivetrain);
-	// moveInches(TILE_LENGTH*3, drivetrain, -1);
+void spin_rollers_v1(Drivetrain a_drivetrain, Roller a_roller) {
+	// Moves bot forward at fastest speed
+	a_drivetrain.update(127, 0); 
+	pros::Task::delay(500);
+
+	// Drivetrain stops moving
+	a_drivetrain.update(0, 0); 
+
+	// Spin rollers
+	a_roller.switch_color();
 	
+	pros::Task::delay(10); // transition phase
+
+	// Moves the drivetrain backwards for 0.1 seconds
+	a_drivetrain.update(-127,0); 
+	pros::Task::delay(100);
+
+	// Stops moving drivetrain
+	a_drivetrain.update(0,0); 
 }
+
+
+void purple_rollers_high(std::shared_ptr<OdomChassisController> a_odom, Drivetrain drivetrain, Flywheel a_flywheel, Roller a_roller) {
+	// Do rollers
+	spin_rollers_v1(drivetrain, a_roller);
+	// Turn on flywheel
+	a_flywheel.toggle_active(true, false);
+	// Move backward 3 TILES - 42 cm
+	// a_odom->moveDistance(-1 * 3_ft * TILE_LENGTH - 1.37795_ft);
+	// Turn 90 clockwise
+	a_odom->turnAngle(90_deg);
+	// Forward 1 tile
+	// a_odom->moveDistance(1_ft * TILE_LENGTH);
+	// // Turn 135 counter clockwise
+	// a_odom->turnAngle(-135_deg);
+	// // Shoots the disks out of the flywheel twice, 5.5 seconds apart
+	a_flywheel.shoot();
+	pros::Task::delay(5500);
+	a_flywheel.shoot();
+	pros::Task::delay(20);
+}
+
+void green_rollers_low(std::shared_ptr<OdomChassisController> a_odom, Drivetrain a_drivetrain, Flywheel a_flywheel, Roller a_roller) {
+	// Do rollers
+	spin_rollers_v1(a_drivetrain, a_roller);
+	// 5 in back
+	a_odom->moveDistance(0.41667_ft);
+	// 90 deg clockwise
+	a_odom->turnAngle(90_deg);
+	// 3 in + 1.5tiles
+	a_odom->moveDistance(0.25_ft + 1.5_ft * TILE_LENGTH);
+	// Shoot low goals
+	low_goals(2, a_flywheel);
+}
+
+void pink_double_rollers(std::shared_ptr<OdomChassisController> a_odom, Drivetrain a_drivetrain, Roller a_roller) {
+	// Rollers
+	spin_rollers_v1(a_drivetrain, a_roller);
+	// moves back 1 in + 1/2 tile
+	a_odom->moveDistance((TILE_LENGTH * 1_ft + 0.08333_ft));
+	// 90 deg clockwise
+	a_odom->turnAngle(90_deg);
+	// 1 + 1/2 tiles
+	a_odom->moveDistance(1.5_ft * TILE_LENGTH);
+	// Rollers
+	spin_rollers_v1(a_drivetrain, a_roller);
+}
+
+
+
+
+
+
+
+void purple_roller_high_goals(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, int disk_num) {
+	spin_rollers_v1(drivetrain, roller);
+
+
+	odometry->moveDistance(-0.5_ft);
+
+	odometry->turnAngle(135_deg);
+ 
+	a_flywheel.toggle_active(true, false);
+	
+    odometry->moveDistance(3.35_ft * TILE_LENGTH);
+	
+    // odometry->moveDistance(3.35410197_ft);
+    odometry->turnAngle(90_deg);
+	
+	// for (int i = 0 ; i < (disk_num+1) ; i ++) {
+	// 	a_flywheel.shoot();
+	// 	pros::Task::delay(3500);		
+	// }
+	// a_flywheel.disengage();
+}
+
+
+void other_roller (std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, int disk_num) {
+	
+	odometry->moveDistance(1_ft * TILE_LENGTH);
+	odometry->turnAngle(-95_deg);
+	spin_rollers_v1(drivetrain, roller);
+	// pros::Task::delay(500);
+	odometry->turnAngle(90_deg);
+	a_flywheel.toggle_active(true, true);
+	odometry->moveDistance(-2_ft * TILE_LENGTH);
+	for (int i = 0 ; i < (disk_num+1) ; i ++) {
+		a_flywheel.shoot();
+		pros::Task::delay(1500);		
+	}
+
+}	
+
+void high_goal_sole(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, Intake intake, int disk_num) {
+	// flywheel facing front
+	intake.toggle(false);
+	odometry->moveDistance(-3_ft * TILE_LENGTH);
+	a_flywheel.toggle_active(true, false);
+	intake.toggle(false);
+	odometry->turnAngle(50_deg);
+	for (int i = 0 ; i < (disk_num+1) ; i ++) {
+		a_flywheel.shoot();
+		pros::Task::delay(1500); 
+	}
+	intake.toggle(false);
+	odometry->moveDistance(1.291_ft);
+	intake.toggle(false);
+	odometry->moveDistance(-1.291_ft);
+	a_flywheel.shoot();	
+
+}
+
+// starting at the roller where we can't directly touch it
+void high_goal_roller_indirect(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, Intake intake) {
+	// odometry->turnAngle(5_deg);
+	odometry->moveDistance(1_ft * TILE_LENGTH);
+	odometry->turnAngle(-90_deg);
+	spin_rollers_v1(drivetrain, roller);
+
+	odometry->moveDistance(-1_ft * TILE_LENGTH);
+	odometry->turnAngle(45_deg);
+	odometry->moveDistance(-2.8284271_ft * TILE_LENGTH); // sqrt 8
+	odometry->turnAngle(-90_deg);
+	// call flywheel
+}
+
+void autonomous() {
+    auto odometry = build_odometry(okapi::MotorGroup({okapi::Motor(ports::LEFT_BACK_MOTOR), okapi::Motor(ports::LEFT_FRONT_MOTOR)}), 
+                                   okapi::MotorGroup({okapi::Motor(ports::RIGHT_BACK_MOTOR), okapi::Motor(ports::RIGHT_FRONT_MOTOR)}));
+    Flywheel a_flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
+	Drivetrain  drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
+	Roller  roller{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT, ports::INTAKE_UP };
+	Intake  intake{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
+
+	// odometry->setMaxVelocity(100);
+	// green_roller_low_goals(odometry, a_flywheel, drivetrain, roller, 3);
+	// other_roller(odometry, a_flywheel, drivetrain, roller, 3);
+	high_goal_sole(odometry, a_flywheel, drivetrain, roller, intake, 3);
+   
+}
+ 
+
+
+
+// void autonomous() {
+	
+// 	double const ROLLER_LENGTH = TILE_LENGTH - 13.46;
+	
+// 	// Define parts to be manipulated
+// 	pros::Motor left_front(ports::LEFT_FRONT_MOTOR);
+// 	pros::Motor right_front(ports::RIGHT_FRONT_MOTOR);
+// 	pros::Motor left_back(ports::LEFT_BACK_MOTOR);
+// 	pros::Motor right_back(ports::RIGHT_BACK_MOTOR);
+// 	// pros::Motor_Group drivetrain({left_front, left_back, right_front, right_back});
+// 	Drivetrain  drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
+// 	Flywheel  flywheel{ ports::FLYWHEEL_LEFT, ports::FLYWHEEL_RIGHT, ports::PISTON_INDEXER };
+// 	Expansion expansion {ports::EXPANSION_PISTON};
+// 	Intake  intake{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
+// 	Roller  roller{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT, ports::INTAKE_UP };
+
+// 	// Create roller group based on motors separately in order to do continuous spin 
+// 	pros::Motor roller_left(ports::INTAKE_LEFT);
+// 	pros::Motor roller_right(ports::INTAKE_RIGHT);
+// 	pros::Motor_Group rollers({roller_left, roller_right});
+
+	
+// 	pros::Task::delay(10); // just so that we don't start the second auton does
+	
+	
+
+
+// 	// roller_high_goals(roller, flywheel, drivetrain);
+// 	// moveInches(TILE_LENGTH*3, drivetrain, -1);
+	
+// }
 
 
 
