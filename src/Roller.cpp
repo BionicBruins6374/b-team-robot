@@ -13,11 +13,11 @@ void Roller::switch_color() const {
 void Roller::fine_adjust(RollerCode code) {
 	switch (code) {
 		case FORWARD:
-			m_motor.move_velocity(80);
+			m_motor.move_velocity(127);
 			m_on = true;
 			break;
 		case BACKWARD:
-			m_motor.move_velocity(-80);
+			m_motor.move_velocity(-127);
 			m_on = true;
 			break;
 		case STOP:
