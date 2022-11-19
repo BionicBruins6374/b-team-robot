@@ -1,10 +1,9 @@
 bin/main.cpp.o: src/main.cpp include/pros/rtos.hpp include/pros/rtos.h \
- include/pros/vision.hpp include/pros/vision.h include/Drivetrain.hpp \
- include/pros/motors.hpp include/pros/motors.h include/Flywheel.hpp \
- include/pros/adi.hpp include/pros/adi.h include/Robot.hpp \
- include/pros/misc.hpp include/pros/misc.h include/Intake.hpp \
- include/Expansion.hpp include/Roller.hpp include/main.hpp \
- include/ports.hpp include/odometry.hpp \
+ include/Drivetrain.hpp include/pros/motors.hpp include/pros/motors.h \
+ include/Flywheel.hpp include/pros/adi.hpp include/pros/adi.h \
+ include/Robot.hpp include/pros/misc.hpp include/pros/misc.h \
+ include/Intake.hpp include/Expansion.hpp include/Roller.hpp \
+ include/main.hpp include/ports.hpp include/odometry.hpp \
  include/okapi/impl/chassis/controller/chassisControllerBuilder.hpp \
  include/okapi/api/chassis/controller/chassisControllerIntegrated.hpp \
  include/okapi/api/chassis/controller/chassisController.hpp \
@@ -84,9 +83,9 @@ bin/main.cpp.o: src/main.cpp include/pros/rtos.hpp include/pros/rtos.h \
  include/pros/llemu.hpp include/pros/llemu.h include/pros/optical.hpp \
  include/pros/optical.h include/pros/rotation.hpp include/pros/rotation.h \
  include/pros/rtos.hpp include/pros/screen.hpp include/pros/screen.h \
- include/pros/vision.hpp include/pros/link.hpp include/pros/link.h \
- include/pros/apix.h include/pros/serial.h include/pros/serial.hpp \
- include/okapi/api/util/abstractTimer.hpp \
+ include/pros/vision.hpp include/pros/vision.h include/pros/link.hpp \
+ include/pros/link.h include/pros/apix.h include/pros/serial.h \
+ include/pros/serial.hpp include/okapi/api/util/abstractTimer.hpp \
  include/okapi/api/units/QFrequency.hpp include/okapi/api/units/QTime.hpp \
  include/okapi/api/util/mathUtil.hpp \
  include/okapi/api/device/motor/abstractMotor.hpp \
@@ -130,8 +129,6 @@ bin/main.cpp.o: src/main.cpp include/pros/rtos.hpp include/pros/rtos.h \
  include/okapi/impl/util/timeUtilFactory.hpp
 include/pros/rtos.hpp:
 include/pros/rtos.h:
-include/pros/vision.hpp:
-include/pros/vision.h:
 include/Drivetrain.hpp:
 include/pros/motors.hpp:
 include/pros/motors.h:
@@ -297,6 +294,7 @@ include/pros/rtos.hpp:
 include/pros/screen.hpp:
 include/pros/screen.h:
 include/pros/vision.hpp:
+include/pros/vision.h:
 include/pros/link.hpp:
 include/pros/link.h:
 include/pros/apix.h:
