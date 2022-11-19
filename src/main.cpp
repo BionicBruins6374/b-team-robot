@@ -1,5 +1,4 @@
 #include "pros/rtos.hpp"
-#include "pros/vision.hpp"
 
 #include "Drivetrain.hpp"
 #include "Flywheel.hpp"
@@ -26,12 +25,11 @@ void opcontrol() {
 	Drivetrain const drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
 	Flywheel const flywheel{ ports::FLYWHEEL, ports::PISTON_INDEXER };
 	Intake const intake{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
-	Expansion const expansion{ ports::EXPANSION_PISTON };
+	Expansion const expansion{ ports::EXPANSION_PISTON_LEFT, ports::EXPANSION_PISTON_RIGHT};
 	Roller const roller { ports::ROLLER };
 	Robot robot{ drivetrain, flywheel, intake, expansion, roller};
 
 	while (true) {
-		robot.update();
 		pros::Task::delay(1);
 	}
 }

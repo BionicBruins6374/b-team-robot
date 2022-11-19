@@ -7,7 +7,9 @@ namespace ports {
 constexpr int8_t FLYWHEEL = 12;
 
 constexpr uint8_t PISTON_INDEXER = 'A';
-constexpr uint8_t EXPANSION_PISTON = 'B';
+constexpr uint8_t EXPANSION_PISTON_LEFT = 'B';
+constexpr uint8_t EXPANSION_PISTON_RIGHT = 'C';
+
 
 
 constexpr int8_t LEFT_BACK_MOTOR = 2;
