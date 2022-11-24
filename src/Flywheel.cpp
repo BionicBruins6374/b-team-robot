@@ -8,7 +8,7 @@
 #include "constants.hpp"
 
 Flywheel::Flywheel(int8_t const port, uint8_t const piston_port)
-	: m_motor{ port }, m_piston{ piston_port } {}
+    : m_motor{ port, true }, m_piston{ piston_port } {}
 
 
 void Flywheel::disengage() {

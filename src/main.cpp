@@ -27,8 +27,11 @@ void opcontrol() {
 	Robot robot{ drivetrain, flywheel, intake, expansion, roller};
 
 	while (true) {
+		robot.update();
 		pros::Task::delay(1);
 	}
+
+
 }
 
 
