@@ -13,11 +13,11 @@ void Roller::switch_color() const {
 void Roller::fine_adjust(RollerCode code) {
 	switch (code) {
 		case FORWARD:
-			m_motor.move_velocity(80);
+			m_motor.move_velocity(127);
 			m_on = true;
 			break;
 		case BACKWARD:
-			m_motor.move_velocity(-80);
+			m_motor.move_velocity(-127);
 			m_on = true;
 			break;
 		case STOP:
@@ -29,12 +29,14 @@ void Roller::fine_adjust(RollerCode code) {
 	};
 }
 
-void Roller::spin_wheel(bool on) const{
-	if (on) {
-		m_motor.move_velocity(100);
+void Roller::spin_wheel(int scaler) {
+	if (m_on) {
+		m_motor.move_velocity(0);
+		m_on = false;
 	}
 
 	else {
-		m_motor.move_velocity(0);
+		m_motor.move_velocity(600 * scaler);
+		m_on = true;
 	}
 }

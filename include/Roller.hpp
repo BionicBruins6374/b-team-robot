@@ -18,5 +18,5 @@ public:
 	Roller(int8_t const port);
 	void switch_color() const;
 	void fine_adjust(RollerCode code);
-	void spin_wheel(bool on) const;	
+	void spin_wheel(int scaler) ;	
 };
