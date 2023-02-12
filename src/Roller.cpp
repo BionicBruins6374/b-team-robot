@@ -36,7 +36,7 @@ void Roller::spin_wheel(int scaler) {
 	}
 
 	else {
-		m_motor.move_velocity(600 * scaler);
+		m_motor.move_velocity(100 * scaler);
 		m_on = true;
 	}
 }

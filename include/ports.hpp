@@ -10,7 +10,7 @@ constexpr uint8_t PISTON_INDEXER = 'A';
 constexpr uint8_t EXPANSION_PISTON_LEFT = 'B';
 constexpr uint8_t EXPANSION_PISTON_RIGHT = 'C';
 
-
+constexpr int8_t OPTICAL_SENSOR = 20;
 
 constexpr int8_t LEFT_BACK_MOTOR = 2;
 constexpr int8_t RIGHT_BACK_MOTOR = 1;
