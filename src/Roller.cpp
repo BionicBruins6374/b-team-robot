@@ -29,7 +29,7 @@ void Roller::fine_adjust(RollerCode code) {
 	};
 }
 
-void Roller::spin_wheel(int scaler) {
+void Roller::spin_wheel(double scaler) {
 	if (m_on) {
 		m_motor.move_velocity(0);
 		m_on = false;

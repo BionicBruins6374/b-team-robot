@@ -47,10 +47,10 @@ void Robot::update_expansion() {
 
 void Robot::update_roller() {
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
-		m_roller.spin_wheel(1); 
+		m_roller.spin_wheel(0.9); 
 	}
 	if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-		m_roller.spin_wheel(-1); 
+		m_roller.spin_wheel(-0.9); 
 	}
 	// } else if (!m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP) && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
 	// 	m_roller.fine_adjust(Roller::STOP);
