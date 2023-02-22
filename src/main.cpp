@@ -14,6 +14,15 @@
 #include "okapi/impl/device/motor/motor.hpp"
 #include "okapi/impl/device/motor/motorGroup.hpp"
 
+#include "okapi/impl/device/rotarysensor/integratedEncoder.hpp"
+// #include "okapi/impl/chassis/controller/chassisControllerBuilder.hpp"
+// #include "okapi/impl/device/motor/motorGroup.hpp"
+// #include <cstdint>
+
+#include "cmath"
+#define PI 3.14159265
+#include "string"
+
 double const TILE_LENGTH = 1.8266667; // feet
 double const ROBOT_LENGTH = 1.5; // feet
 double const ROLLER_LENGTH = 0.1666667; // feet
@@ -68,6 +77,19 @@ void spin_rollers_v1(std::shared_ptr<OdomChassisController> a_odom, Roller a_rol
  
 }
 
+void spin_rollers_v1(std::shared_ptr<OdomChassisController> a_odom, Roller a_roller, double distance, int millisec) {
+	// Moves bot forward at fastest speed
+	a_odom->moveDistance(1_ft * distance);
+
+	a_roller.spin_wheel(1.2);
+	pros::Task::delay(millisec);
+	a_roller.spin_wheel(1.1);
+
+	
+	a_odom->moveDistance(-1_ft * distance);
+ 
+}
+
 void spin_rollers_v1(std::shared_ptr<OdomChassisController> a_odom, Roller a_roller, bool ignore) {
 	// Moves bot forward at fastest speed
 	a_odom->moveDistance(0.2_ft);
@@ -108,48 +130,6 @@ void green_rollers_low(std::shared_ptr<OdomChassisController> a_odom, Drivetrain
 	low_goals(2, a_flywheel);
 }
 
-void pink_double_rollers(std::shared_ptr<OdomChassisController> a_odom, Drivetrain a_drivetrain, Roller a_roller) {
-	// Rollers
-	spin_rollers_v1(a_odom, a_roller);
-	// moves back 1 in + 1/2 tile
-	a_odom->moveDistance((TILE_LENGTH * 1_ft + 0.08333_ft));
-	// 90 deg clockwise
-	a_odom->turnAngle(90_deg);
-	// 1 + 1/2 tiles
-	a_odom->moveDistance(1.5_ft * TILE_LENGTH);
-	// Rollers
-	spin_rollers_v1(a_odom, a_roller);
-}
-
-
-
-
-void purple_roller_high_goals(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, int disk_num) {
-	
-	spin_rollers_v1(odometry);
-
-	pros::Task::delay(300);
-
-	odometry->moveDistance(-0.7_ft);
-
-	odometry->turnAngle(145_deg);
-
-	
- 
-	a_flywheel.aim(1);
-	
-    odometry->moveDistance(3.35_ft * TILE_LENGTH);
-	
-    // odometry->moveDistance(3.35410197_ft);
-	odometry->setMaxVelocity(160.0); // use brain to see the velocity of the flywheel motor at the two diff voltages
-    odometry->turnAngle(-93_deg);
-	
-	for (int i = 0 ; i < (disk_num) ; i ++) {
-		a_flywheel.shoot();
-		pros::Task::delay(1000);		
-	}
-	a_flywheel.disengage();
-}
 
 
 void new_roller_high_goals_side(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, Intake intake, int disk_num) {
@@ -223,13 +203,21 @@ void corners_start_roller(std::shared_ptr<okapi::OdomChassisController> odometry
 void rollers_side_skill(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, Intake intake, int disk_num) {
 	// turn on flywheel 
 	a_flywheel.aim(3);
+	std::printf( "spin rollers \n" );
 	// spin rollers
-	spin_rollers_v1(odometry, roller, true);
+	try {
+	// spin_rollers_v1(odometry, roller, true);
+	}
+	catch (...) {
+		std::printf("an error");
+		odometry->setState(okapi::OdomState({0_ft, 0_ft, 0_deg}));
 
+	}
 	// wait for flywheel to turn on
-	pros::Task::delay(350);
-	pros::Task::delay(2500);
-	
+	// pros::Task::delay(350);
+	std::printf( "flywheel wait \n" );
+	pros::Task::delay(2850);
+	std::printf( "shoot preloads \n" );
 	// shoot the two preloads
 	for (int i = 0 ; i < (2) ; i ++) {
 		a_flywheel.shoot();
@@ -237,190 +225,147 @@ void rollers_side_skill(std::shared_ptr<okapi::OdomChassisController> odometry, 
 	}
 
 	// go backwards to meet the line
-	odometry->moveDistance(TILE_LENGTH * -1_ft);
+	std::printf( "backwards \n" );
+	odometry->moveDistance(TILE_LENGTH * -1_ft);	
 	// turn towards second roller
+	std::printf( "turn towards second roller \n" );
 	odometry->turnAngle(-90_deg);
 	// go forward to second roller
+	std::printf( "forward towards second roller \n" );
 	odometry->moveDistance(TILE_LENGTH* 0.9 * 1_ft);
 	// spin rollers
-	spin_rollers_v1(odometry, roller, true);
+	std::printf( "spin rollers \n" );
+	// spin_rollers_v1(odometry, roller, true);
 
 	// go back to middle line
+	std::printf( "go back to middle line \n" );
 	odometry->moveDistance(TILE_LENGTH* -0.9 * 1_ft);
-	// turn clockwise 45 degrees
-	odometry->turnAngle(45_deg);
+	// turn clockwise 90 + 45 degrees
+	std::printf( "turn 135 deg \n" );
+	odometry->turnAngle(-135_deg);
 	// turn on intake
 	intake.toggle(false);
 	// go forward towards midpoint of field
-	odometry->moveDistance(-2.82842712_ft * TILE_LENGTH);
+	std::printf( "midpoint of field \n" );
+	odometry->moveDistance(2.82842712_ft * TILE_LENGTH);
 	// turn 90 deg clockwise
-	odometry->turnAngle(90_deg);
+	std::printf( "turn 90 deg \n" );
+	odometry->turnAngle(-90_deg);
 	// shoot the 3 intake disks
+	std::printf( "shoot disks\n" );
 	for (int i = 0 ; i < (3) ; i ++) {
 		a_flywheel.shoot();
 		pros::Task::delay(1300);		
 	}
 	// turn so intake facing disks again
-	odometry->turnAngle(-90_deg);
+	std::printf( "turn to disks \n" );
+	odometry->turnAngle(90_deg);
 	// go forward to a certain point
-	odometry->moveDistance(-3.473_ft * TILE_LENGTH);
+	std::printf( "forward to point \n" );
+	odometry->moveDistance(2.473_ft * TILE_LENGTH );
 	// turn to shoot maybeebeeebebeb later
 	// turn towards roller
-	odometry->turnAngle(45_deg);
-	// move forward one tile
+	std::printf( "turn to roller \n" );
+	odometry->turnAngle(-45_deg);
+	// move forward ~one tile (up to roller)
 	odometry->moveDistance(0.9_ft * TILE_LENGTH);
-
-	spin_rollers_v1(odometry, roller, true);
-
+	pros::Task::delay(50);
+	// spin_rollers_v1(odometry, roller, true);
+	// go backwards
 	odometry->moveDistance(-1_ft * TILE_LENGTH);
-
-	odometry->turnAngle(-90_deg);
+	// turn  90 deg counterclockwise to face second roller
+	odometry->turnAngle(90_deg);
 
 	odometry->moveDistance(1.25_ft * TILE_LENGTH);
-	spin_rollers_v1(odometry, roller, true);
+	// spin_rollers_v1(odometry, roller, true);
 
 	
 
 }
-void roller_high_goals_side_minchan(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, Intake intake, int disk_num) {
+
+
+void far_roller(std::shared_ptr<okapi::OdomChassisController> a_odom, Flywheel a_flywheel, Drivetrain a_drivetrain, Roller roller, Intake a_intake) {
+	a_flywheel.aim(4);
+	a_intake.toggle(false); 
+
+	double y_forward = TILE_LENGTH - ROBOT_LENGTH + TILE_LENGTH;
+	double x_forward = 1.25 * TILE_LENGTH;
+	double diagonal = std::sqrt(std::pow(y_forward, 2) + std::pow(x_forward, 2));
+	double angle_to_turn = std::asin(x_forward/diagonal) * 180.0 / PI;
+    // moves forward to disk, then moves 0.2 ft more to intake disk TEST FOR INTAKE
+	a_odom->moveDistance(y_forward* 1_ft); 
+	// pause to intake
+    pros::Task::delay(500);
+	// a_intake.toggle(false);
+    
+    // turn so intake faces roller diagonally 
+	a_odom->turnAngle(-90_deg - (90 - angle_to_turn) * 1_deg); // 90 - 66 = 24 (check miro)
+	// move to roller
+    a_odom->moveDistance(diagonal * 1_ft - 0.25_ft);
+
+
+	// turn to directly face roller
+    a_odom->turnAngle(-1_deg * angle_to_turn);
+    // spin rollers
+	spin_rollers_v1(a_odom, roller, 0.3, 270);
 	
-	a_flywheel.aim(2);
-	spin_rollers_v1(odometry);
+	a_intake.toggle(false);
 
-	pros::Task::delay(300);
-
-	// odometry->moveDistance(-0.7_ft);
-
-	odometry->turnAngle(-3.5_deg); // counterclockwise
-
-
-	
-	// a_flywheel.aim(1);
-	// a_flywheel.aim(1);
-	pros::Task::delay(2500);
-    // odometry->moveDistance(3.35_ft * TILE_LENGTH);
-	
-    // // odometry->moveDistance(3.35410197_ft);
-	// odometry->setMaxVelocity(160.0); // use brain to see the velocity of the flywheel motor at the two diff voltages
-    // odometry->turnAngle(-93_deg);
-	
-	for (int i = 0 ; i < (2) ; i ++) {
-		a_flywheel.shoot();
-		pros::Task::delay(1000);		
-	}
-
-	intake.toggle(false);
-	odometry->turnAngle(3.5_deg); 
-	odometry->moveDistance(-1_ft * (TILE_LENGTH - 1.66667));
-	pros::Task::delay(200);
-	odometry->turnAngle(111.39100_deg); 
-	odometry->moveDistance(2.9437_ft); 
-	odometry->moveDistance(-0.3_ft);
-	pros::Task::delay(100);
-	odometry->setMaxVelocity(70.0); // use brain to see the velocity of the flywheel motor at the two diff voltages
-	odometry->moveDistance(0.3_ft);
-	pros::Task::delay(50);
-	odometry->turnAngle(-136_deg);
-	a_flywheel.shoot();
-	a_flywheel.disengage();
-
-}
-
-void skills(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, int disk_num) {
-	purple_roller_high_goals(odometry, a_flywheel, drivetrain, roller, 3);
-	odometry->turnAngle(95_deg);
-	odometry->moveDistance(3.66555128_ft * TILE_LENGTH);
-	odometry->turnAngle(-45_deg);
-	spin_rollers_v1(odometry); 
-
-}
-
-void other_roller (std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, int disk_num) {
-	
-	odometry->moveDistance(1_ft * TILE_LENGTH);
-	odometry->turnAngle(-95_deg);
-	spin_rollers_v1(odometry, roller);
-	odometry->turnAngle(90_deg);
-	a_flywheel.aim(0);
-	odometry->moveDistance(-2_ft * TILE_LENGTH);
-	for (int i = 0 ; i < (disk_num+1) ; i ++) {
-		a_flywheel.shoot();
-		pros::Task::delay(500);		
-	}
-
-}	
-
-void high_goal_sole(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, Intake intake, int disk_num) {
-	// flywheel facing front
-	intake.toggle(false);
-	odometry->moveDistance(-3_ft * TILE_LENGTH);
-	a_flywheel.aim(2);
-	intake.toggle(false);
-	odometry->turnAngle(50_deg);
-	for (int i = 0 ; i < (disk_num+1) ; i ++) {
-		a_flywheel.shoot();
-		pros::Task::delay(1500); 
-	}
-	intake.toggle(false);
-	odometry->moveDistance(1.291_ft);
-	intake.toggle(false);
-	odometry->moveDistance(-1.291_ft);
-	a_flywheel.shoot();	
-
-}
-
-// starting at the roller where we can't directly touch it
-void high_goal_roller_indirect(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, Intake intake) {
-	odometry->moveDistance(1_ft * TILE_LENGTH);
-	odometry->turnAngle(-90_deg);
-	spin_rollers_v1(odometry, roller);
-
-	odometry->moveDistance(-1_ft * TILE_LENGTH);
-	odometry->turnAngle(45_deg);
-	odometry->moveDistance(-2.8284271_ft * TILE_LENGTH); // sqrt 8
-	odometry->turnAngle(-90_deg);
-
-	// call flywheel
-	for (int i = 0 ; i < (3); i ++) {
-		a_flywheel.shoot();
-		pros::Task::delay(1500); 
-	}
-}
-
-void far_roller(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel flywheel, Drivetrain drivetrain, Roller roller, Intake intake) {
-	flywheel.aim(3);
-	intake.toggle(false); 
-	odometry->moveDistance((TILE_LENGTH - ROBOT_LENGTH + TILE_LENGTH/2 + 0.2) * 1_ft); 
-	pros::Task::delay(500);
-	intake.toggle(false);
-	odometry->turnAngle(90_deg + 24_deg); // 90 - 66 = 24 (check miro)
-	odometry->moveDistance(3.54833045_ft);
-	odometry->turnAngle(66_deg);
-	spin_rollers_v1(odometry, roller);
-	
-	odometry->turnAngle(45_deg);
+    // turn to shoot
+	a_odom->turnAngle(-14_deg);
 
 	// 2 preload disks + 1 intake disk
 	for (int i = 0 ; i < 3 ; i ++) {
-		flywheel.shoot();
-		pros::Task::delay(1500);		
+		a_flywheel.shoot();
+		pros::Task::delay(1800);		
 	}
 
-	flywheel.disengage();
+	a_flywheel.disengage();
 }
 
+
+
+using namespace okapi;
+
+
 void autonomous() {
+	pros::Task::delay(100);
     auto odometry = build_odometry(okapi::MotorGroup({okapi::Motor(ports::LEFT_BACK_MOTOR), okapi::Motor(ports::LEFT_FRONT_MOTOR)}), 
                                    okapi::MotorGroup({okapi::Motor(ports::RIGHT_BACK_MOTOR), okapi::Motor(ports::RIGHT_FRONT_MOTOR)}));
-    Flywheel a_flywheel{ ports::FLYWHEEL, ports::PISTON_INDEXER };
+    
+	// okapi::MotorGroup left_motors = okapi::MotorGroup({okapi::Motor(ports::LEFT_BACK_MOTOR), okapi::Motor(ports::LEFT_FRONT_MOTOR)});
+	// okapi::MotorGroup right_motors = okapi::MotorGroup({okapi::Motor(ports::RIGHT_BACK_MOTOR), okapi::Motor(ports::RIGHT_FRONT_MOTOR)});
+	// std::shared_ptr<OdomChassisController> odometry  = okapi::ChassisControllerBuilder()
+	// 	.withMotors(left_motors, right_motors)
+	// 	.withDimensions(AbstractMotor::gearset::green, {{4_in, 15_in}, imev5GreenTPR})
+	// 	.withOdometry() 
+	// 	.buildOdometry(); 
+
+	okapi::IntegratedEncoder left_front_encoder = okapi::IntegratedEncoder(ports::LEFT_FRONT_MOTOR);
+	okapi::IntegratedEncoder left_back_encoder = okapi::IntegratedEncoder(ports::LEFT_BACK_MOTOR);
+	okapi::IntegratedEncoder right_front_encoder = okapi::IntegratedEncoder(ports::RIGHT_FRONT_MOTOR);
+	okapi::IntegratedEncoder right_back_encoder = okapi::IntegratedEncoder(ports::RIGHT_BACK_MOTOR);
+
+	std::printf("left back: %f \n", left_back_encoder.get());
+	std::printf("right back: %f \n", right_back_encoder.get());
+	std::printf("left front: %f \n", left_front_encoder.get());
+	std::printf("right front: %f \n", right_front_encoder.get());
+
+	left_front_encoder.reset(); left_back_encoder.reset(); right_front_encoder.reset(); right_back_encoder.reset();
+
+	
+	Flywheel a_flywheel{ ports::FLYWHEEL, ports::PISTON_INDEXER };
 	Drivetrain  drivetrain{ ports::LEFT_BACK_MOTOR, ports::RIGHT_BACK_MOTOR, ports::LEFT_FRONT_MOTOR, ports::RIGHT_FRONT_MOTOR };
 	Roller  roller{ ports::ROLLER };
 	Intake  intake{ ports::INTAKE_LEFT, ports::INTAKE_RIGHT };
-
+	std::printf( "yada %s", odometry->getState().str().c_str() );
+	odometry->setState(okapi::OdomState({0_ft, 0_ft, 0_deg}));
 	// odometry->setMaxVelocity(100);
 	// new_roller_high_goals_side(odometry, a_flywheel, drivetrain, roller, intake, 2);
-	// rollers_side_skill(odometry, a_flywheel, drivetrain, roller, intake, 3);
-	spin_rollers_v1(odometry, roller);
+	pros::Task::delay(50);
+	rollers_side_skill(odometry, a_flywheel, drivetrain, roller, intake, 3);
+	// spin_rollers_v1(odometry, roller);
+	// odometry->setMaxVelocity(130);
 	// far_roller(odometry, a_flywheel, drivetrain, roller, intake);
 	// other_roller(odometry, a_flywheel, drivetrain, roller, 3);
 	// spin_rollers_v1(odometry, roller);
