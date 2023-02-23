@@ -130,29 +130,23 @@ void green_rollers_low(std::shared_ptr<OdomChassisController> a_odom, Drivetrain
 
 
 void new_roller_high_goals_side(std::shared_ptr<okapi::OdomChassisController> odometry, Flywheel a_flywheel, Drivetrain drivetrain, Roller roller, Intake intake, int disk_num) {
-	
 	// turn on flywheel 
 	a_flywheel.aim(3);
 	// spin rollers
 	spin_rollers_v1(odometry, roller);
-
 	// wait for flywheel to turn on
 	pros::Task::delay(350);
 	// odometry->turnAngle(-3_deg);
 	pros::Task::delay(2500);
-	
 	// shoot the two preloads
 	for (int i = 0 ; i < (2) ; i ++) {
 		a_flywheel.shoot();
 		pros::Task::delay(1500);		
 	}
-
 	// turn off flywheel
 	a_flywheel.disengage();
-
 	// turn on intake
 	intake.toggle(false);
-	
 	// turn to face the disk pile, diagonally
 	odometry->turnAngle(3.5_deg); 
 	// move to disks
