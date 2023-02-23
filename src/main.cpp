@@ -136,7 +136,7 @@ void new_roller_high_goals_side(std::shared_ptr<okapi::OdomChassisController> od
 	spin_rollers_v1(odometry, roller);
 	// wait for flywheel to turn on
 	pros::Task::delay(350);
-	// odometry->turnAngle(-3_deg);
+	odometry->turnAngle(-3_deg);
 	pros::Task::delay(2500);
 	// shoot the two preloads
 	for (int i = 0 ; i < (2) ; i ++) {
