@@ -356,9 +356,9 @@ void autonomous() {
 	std::printf( "yada %s", odometry->getState().str().c_str() );
 	odometry->setState(okapi::OdomState({0_ft, 0_ft, 0_deg}));
 	// odometry->setMaxVelocity(100);
-	// new_roller_high_goals_side(odometry, a_flywheel, drivetrain, roller, intake, 2);
+	new_roller_high_goals_side(odometry, a_flywheel, drivetrain, roller, intake, 2);
 	pros::Task::delay(500);
-	rollers_side_skill(odometry, a_flywheel, drivetrain, roller, intake, a_expansion, 3);
+	// rollers_side_skill(odometry, a_flywheel, drivetrain, roller, intake, a_expansion, 3);
 	// spin_rollers_v1(odometry, roller);
 	// odometry->setMaxVelocity(130);
 	// far_roller(odometry, a_flywheel, drivetrain, roller, intake);
