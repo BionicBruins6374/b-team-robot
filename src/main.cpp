@@ -358,10 +358,10 @@ void autonomous() {
 	// odometry->setMaxVelocity(100);
 	// new_roller_high_goals_side(odometry, a_flywheel, drivetrain, roller, intake, 2);
 	pros::Task::delay(500);
-	// rollers_side_skill(odometry, a_flywheel, drivetrain, roller, intake, a_expansion, 3);
+	rollers_side_skill(odometry, a_flywheel, drivetrain, roller, intake, a_expansion, 3);
 	// spin_rollers_v1(odometry, roller);
 	// odometry->setMaxVelocity(130);
-	far_roller(odometry, a_flywheel, drivetrain, roller, intake);
+	// far_roller(odometry, a_flywheel, drivetrain, roller, intake);
 	// other_roller(odometry, a_flywheel, drivetrain, roller, 3);
 	// spin_rollers_v1(odometry, roller);
 }
